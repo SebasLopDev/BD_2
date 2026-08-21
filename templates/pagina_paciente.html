@@ -1,0 +1,64 @@
+{% extends 'base_paciente.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+    
+    <main class="container-pagina">
+        <div class="contenedor-nav">
+
+            <nav class="nav">
+                <a href="{{ url_for('pagina_paciente') }}">Mis datos</a>
+                <a href="{{ url_for('consultar_especialidades')}}">Consultar Especialidades</a>
+                <a href="{{ url_for('nueva_cita') }}">Reservar Cita</a>
+                <a href="{{ url_for('logout') }}">Cerrar sesión</a>            
+                
+            </nav>
+        </div>
+
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                <div class="alert alert-{{ categoria }} alert-dismissible fade show mt-3 mx-3" role="alert">
+                    {{ mensaje }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+         <h3>Bienvenido, {{ session["nombre"] }}</h3>
+
+    
+
+    <!-- Bloque de contenido que se reemplazará en cada página específica -->
+        
+    </main>
+
+    <footer class="footer">
+        <div class="contenedor-footer">
+            <div class="footer-ubicacion">
+                <h4>Ubicación</h4>                
+                <p>Avenida del Aroma 123,</p>
+                <p>Barrio Aromático</p>
+                <p>CP 45678</p>
+            </div>
+            <div class="footer-box reservacion">
+                <h4>Reservación</h4>
+                <p>Tel. 3850-9102</p>
+                <p>Llamar</p>
+            </div>
+            <div class="footer-box horario">
+                <h4>Horario</h4>
+                <p>Lun-Jue: 11:00 - 22:00</p>
+                <p>Vie-Sab: 09:00 - 24:00</p>
+                <p>Domingo: Cerrado</p>
+            </div>
+        </div>
+        <p class="copyright">Todos los derechos reservados. Clínica Medical</p>
+    </footer>
+
+
+{% endblock %}

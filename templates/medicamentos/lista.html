@@ -1,0 +1,59 @@
+{% extends 'base_medico.html' %}
+
+{% block title %}Listar medicamentos{% endblock %}
+
+{% block content %}
+
+<main class="container-pagina">
+    <div class="contenedor-nav">
+
+            <nav class="nav">
+                <a href="{{ url_for('pagina_medico') }}">Mi horario</a>
+                <a href="{{ url_for('listar_diagnosticos') }}">Consultar pacientes</a>
+                <a href="{{ url_for('crear_diagnostico') }}">Registrar Diagnostico</a>           
+                <a href="{{ url_for('logout') }}">Cerrar sesión</a>            
+                
+            </nav>
+    </div>
+
+    
+
+    <div class="container mt-4">
+        <h2>Lista de Medicamentos</h2>
+        <a href="{{ url_for('crear_medicamento') }}" class="btn btn-primary mb-3">Nuevo Medicamento</a>
+        
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Presentación</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for med in medicamentos %}
+                <tr>
+                    <td>{{ med.nombre_medcmnto }}</td>
+                    <td>{{ med.presentacion }}</td>
+                    <td>{{ med.descrip_medcmnto }}</td>
+                    <td>
+                        <a href="{{ url_for('editar_medicamento', id=med.id_medicamento) }}" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="{{ url_for('eliminar_medicamento', id=med.id_medicamento) }}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar este medicamento?');">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+</main>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'admin_base.html' %}
+{% block title %}Administrar Pacientes{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="mb-4">Administrar Pacientes</h2>
+
+  <!-- Formulario Agregar -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Agregar Nuevo Paciente</h5>
+      <form method="post" class="row g-3">
+        <input type="hidden" name="action" value="add">
+        <!-- Campos Paciente -->
+        <div class="col-md-3"><input name="nombre" class="form-control" placeholder="Nombre" required></div>
+        <div class="col-md-3"><input name="apellido" class="form-control" placeholder="Apellido" required></div>
+        <div class="col-md-2"><input name="dni" class="form-control" placeholder="DNI" required></div>
+        <div class="col-md-2"><input name="fecha_nacimiento" type="date" class="form-control" required></div>
+        <div class="col-md-2">
+          <select name="sexo" class="form-select">
+            <option value="M">M</option><option value="F">F</option>
+          </select>
+        </div>
+        <div class="col-md-3"><input name="telefono" class="form-control" placeholder="Teléfono"></div>
+        <div class="col-md-3"><input name="email" type="email" class="form-control" placeholder="Email"></div>
+        <div class="col-md-6"><input name="direccion" class="form-control" placeholder="Dirección"></div>
+        <!-- Datos Usuario -->
+        
+        <div class="col-md-3"><input name="contrasena_user" type="password" class="form-control" placeholder="Contraseña" required></div>
+        <div class="col-12 text-end">
+          <button type="submit" class="btn btn-success">Agregar Paciente</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabla de Listado -->
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>ID</th><th>Nombre</th><th>Apellido</th><th>DNI</th><th>Fec. Nac.</th>
+        <th>Sexo</th><th>Teléfono</th><th>Dirección</th><th>Email Paciente</th>
+        <th>ID Usuario</th><th>Nombre Usuario</th><th>Email Usuario</th><th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in pacientes %}
+      <tr>
+        <td>{{ p.id_paciente }}</td>
+        <td>{{ p.nombre_paciente }}</td>
+        <td>{{ p.apellido_paciente }}</td>
+        <td>{{ p.dni }}</td>
+        <td>{{ p.fecha_nacimiento }}</td>
+        <td>{{ p.sexo }}</td>
+        <td>{{ p.telefono }}</td>
+        <td>{{ p.direccion }}</td>
+        <td>{{ p.email_paciente }}</td>
+        <td>{{ p.id_usuario or '-' }}</td>
+        <td>{{ p.nombre_usuario or '-' }}</td>
+        <td>{{ p.email_usuario or '-' }}</td>
+        <td class="d-flex gap-1">
+          <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ p.id_paciente }}">Editar</button>
+          <form method="post" style="display:inline">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="id" value="{{ p.id_paciente }}">
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar paciente?');">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+
+      <!-- Modal Editar -->
+      <div class="modal fade" id="editModal{{ p.id_paciente }}" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <form method="post">
+              <input type="hidden" name="action" value="update">
+              <input type="hidden" name="id" value="{{ p.id_paciente }}">
+              <div class="modal-header">
+                <h5 class="modal-title">Editar Paciente #{{ p.id_paciente }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body row g-3">
+                <div class="col-md-6"><label>Nombre</label><input name="nombre" value="{{ p.nombre_paciente }}" class="form-control"></div>
+                <div class="col-md-6"><label>Apellido</label><input name="apellido" value="{{ p.apellido_paciente }}" class="form-control"></div>
+                <div class="col-md-4"><label>DNI</label><input name="dni" value="{{ p.dni }}" class="form-control"></div>
+                <div class="col-md-4"><label>F. Nacimiento</label><input name="fecha_nacimiento" type="date" value="{{ p.fecha_nacimiento }}" class="form-control"></div>
+                <div class="col-md-4"><label>Sexo</label><select name="sexo" class="form-select"><option value="M" {% if p.sexo=='M' %}selected{% endif %}>M</option><option value="F" {% if p.sexo=='F' %}selected{% endif %}>F</option></select></div>
+                <div class="col-md-6"><label>Teléfono</label><input name="telefono" value="{{ p.telefono }}" class="form-control"></div>
+                <div class="col-md-6"><label>Dirección</label><input name="direccion" value="{{ p.direccion }}" class="form-control"></div>
+                <div class="col-12"><label>Email Paciente</label><input name="email" type="email" value="{{ p.email_paciente }}" class="form-control"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

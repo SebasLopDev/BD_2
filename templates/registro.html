@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrate{% endblock %}
+
+{% block content %}
+
+
+<main>
+
+    <div class="container_registro">
+        <h1>Registrar Usuario</h1>
+
+        <!-- MENSAJES FLASH -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="container_registrar">
+             <img class="image_registrar" src="./static/images/registrar.jpg" alt="registro">
+
+
+            <form method="POST"  action="{{ url_for('registrar') }}" class="formulario-registro">
+                <label>Tus Datos</label>
+                <input type="hidden" name="id_rol" value="1">
+                <input name="nombre" placeholder="Tu Nombre" required>
+                <input name="apellido" placeholder="Tu Apellido" required>
+                <input name="dni" placeholder="Tu DNI" required>
+                <input name="telefono" placeholder="Tu Teléfono">
+                <input name="direccion" placeholder="Tu Dirección">
+                
+                <label>Tu fecha de Nacimiento</label>
+                <input type="date" name="fecha_nacimiento" required>
+                <label>Tu Género</label>
+                <select name="sexo" required>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                </select>
+    
+                <input type="email" name="email" placeholder="Tu Email" required>
+                <input type="password" name="contrasena" placeholder="Tu Contraseña" required>
+    
+    
+                <button type="submit" class="button_reg">Registrar</button>
+            </form>
+        </div>
+
+        
+    </div>
+    
+    
+
+    
+</main>
+
+
+
+
+
+
+
+{% endblock %}

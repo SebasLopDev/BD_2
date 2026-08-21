@@ -1,0 +1,67 @@
+{% extends 'base_medico.html' %}
+
+{% block title %}Nuevo diagnostico{% endblock %}
+
+{% block content %}
+
+<main class="container-pagina">
+    <div class="contenedor-nav">
+
+        <nav class="nav">
+            <a href="{{ url_for('pagina_medico') }}">Mi horario</a>
+            <a href="{{ url_for('listar_diagnosticos') }}">Consultar pacientes</a>
+            <a href="{{ url_for('crear_diagnostico') }}">Registrar Diagnostico</a>               
+            <a href="{{ url_for('logout') }}">Cerrar sesión</a>            
+                    
+        </nav>
+    </div>
+
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                <div class="alert alert-{{ categoria }} alert-dismissible fade show mt-3 mx-3" role="alert">
+                    {{ mensaje }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    <div class="container mt-4">
+        <h4>Registrar Diagnóstico</h4>
+        <form method="post">
+            <div class="form-group">
+                <label for="id_cita">Cita del Paciente</label>
+                <select name="id_cita" class="form-control" required>
+                    <option value="">Seleccione...</option>
+                    {% for cita in citas %}
+                    <option value="{{ cita.id_cita }}">
+                        {{ cita.fecha }} {{ cita.hora }} - {{ cita.nombre }} {{ cita.apellido }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="id_enfermedad">Enfermedad</label>
+                <select name="id_enfermedad" class="form-control" required>
+                    <option value="">Seleccione...</option>
+                    {% for enf in enfermedades %}
+                    <option value="{{ enf.id_enfermedad }}">{{ enf.nombre_enfrmdad }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion">Descripción del diagnóstico</label>
+                <textarea name="descripcion" class="form-control" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar Diagnóstico</button>
+            <a href="{{ url_for('listar_diagnosticos') }}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</main>    
+
+{% endblock %}

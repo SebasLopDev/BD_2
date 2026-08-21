@@ -1,0 +1,58 @@
+{% extends 'base_medico.html' %}
+
+{% block title %}ver_medicamentos_diagnostico{% endblock %}
+
+{% block content %}
+
+<main class="container-pagina">
+    <div class="contenedor-nav">
+
+            <nav class="nav">
+                <a href="{{ url_for('pagina_medico') }}">Mi horario</a>
+                <a href="{{ url_for('listar_diagnosticos') }}">Consultar pacientes</a>
+                <a href="{{ url_for('crear_diagnostico') }}">Registrar Diagnostico</a>           
+                <a href="{{ url_for('logout') }}">Cerrar sesión</a>            
+                
+            </nav>
+    </div>
+
+    
+
+    <div class="container mt-4">
+    <h4>Receta del diagnóstico</h4>
+
+    {% if receta %}
+        <p><strong>Indicaciones generales:</strong> {{ receta.indicaciones_receta }}</p>
+
+        <h5>Medicamentos</h5>
+        {% if medicamentos %}
+            <ul>
+            {% for m in medicamentos %}
+                <li>
+                    {{ m.nombre_medcmnto }} ({{ m.presentacion }})<br>
+                    <strong>Indicaciones:</strong> {{ m.indicaciones_medcmnto }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No se han agregado medicamentos.</p>
+        {% endif %}
+        
+        <a href="{{ url_for('agregar_medicamento', id_receta=receta.id_receta) }}" class="btn btn-sm btn-primary">Agregar medicamento</a>
+    {% else %}
+        <p>Aún no hay receta asociada. <a href="{{ url_for('crear_receta', id_diagnostico=id_diagnostico) }}">Crear ahora</a></p>
+    {% endif %}
+
+    
+
+
+
+
+
+
+</main>
+
+
+
+
+{% endblock %}

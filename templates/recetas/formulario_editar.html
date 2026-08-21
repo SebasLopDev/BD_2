@@ -1,0 +1,37 @@
+{% extends 'base_medico.html' %}
+
+{% block title %}Editar receta{% endblock %}
+
+{% block content %}
+
+<main class="container-pagina">
+    <div class="contenedor-nav">
+
+            <nav class="nav">
+                <a href="{{ url_for('pagina_medico') }}">Mi horario</a>
+                <a href="{{ url_for('listar_diagnosticos') }}">Consultar pacientes</a>
+                <a href="{{ url_for('crear_diagnostico') }}">Registrar Diagnostico</a>           
+                <a href="{{ url_for('logout') }}">Cerrar sesión</a>            
+                
+            </nav>
+    </div>
+
+    
+
+    <h2>Editar Receta</h2>
+    <form method="POST">
+        <label>Indicaciones:</label>
+        <textarea name="indicaciones_receta" class="form-control" required>{{ receta.indicaciones_receta }}</textarea>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </form>
+
+
+
+
+
+</main>
+
+
+
+
+{% endblock %}

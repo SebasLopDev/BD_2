@@ -1,0 +1,240 @@
+{% extends 'base_paciente.html' %}
+
+{% block title %}Nueva Cita{% endblock %}
+
+{% block content %}
+<main class="container-pagina">
+    <div class="contenedor-nav">
+        <nav class="nav">
+            <a href="{{ url_for('pagina_paciente') }}">Mis datos</a>
+            <a href="{{ url_for('consultar_especialidades') }}">Consultar Especialidades</a>
+            <a href="{{ url_for('nueva_cita') }}">Reservar Cita</a>
+            <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+        </nav>
+    </div>
+
+     {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                <div class="alert alert-{{ categoria }} alert-dismissible fade show mt-3 mx-3" role="alert">
+                    {{ mensaje }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+    
+    <div class="container_nueva_listado">
+        <h4>Reservar Nueva Cita</h4>
+        <form method="POST" action="{{ url_for('nueva_cita') }}">
+            <!-- Especialidad -->
+            <div class="form-group">
+                <label>Especialidad:</label>
+                <select name="id_especialidad" id="select-especialidad" class="form-control" required>
+                    <option value="">Seleccione una especialidad</option>
+                    {% for esp in especialidades %}
+                        <option value="{{ esp.id_especialidad }}">{{ esp.nombre_espclidad }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Médico -->
+            <div class="form-group">
+                <label>Médico:</label>
+                <select name="id_medico" id="select-medico" class="form-control" required>
+                    <option value="">Seleccione un médico</option>
+                </select>
+            </div>
+
+            <!-- Turnos -->
+            <div class="form-group">
+                <label>Turno disponible:</label>
+                <select id="select-turno" class="form-control">
+                    <option>Seleccione un médico</option>
+                </select>
+            </div>
+
+            <!-- Hora -->
+            <div class="form-group">
+                <label>Hora:</label>
+                <select name="hora" id="select-hora" class="form-control" required>
+                    <option>Seleccione un turno primero</option>
+                </select>
+            </div>
+
+            <!-- Precio -->
+            <p id="precio-consulta" style="font-weight: bold;"></p>
+
+            <!-- Fecha -->
+            <div class="form-group">
+                <label>Fecha:</label>
+                <input type="date" name="fecha" class="form-control" required>
+            </div>
+
+            <!-- Motivo -->
+            <div class="form-group">
+                <label>Motivo:</label>
+                <input type="text" name="motivo" class="form-control" required>
+            </div>
+
+            <!-- Botón -->
+            <button type="submit" class="btn btn-primary">Reservar Cita</button>
+        </form>
+
+        <hr>
+
+        <h4>Mis Citas Reservadas</h4>
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Motivo</th>
+                    <th>Médico</th>
+                    <th>Sala</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cita in citas %}
+                <tr>
+                    <td>{{ cita.fecha }}</td>
+                    <td>{{ cita.hora }}</td>
+                    <td>{{ cita.motivo }}</td>
+                    <td>{{ cita.nombre_medico }}</td>
+                    <td>{{ cita.nombre_sala or 'Sin asignar' }}</td>
+                    <td>
+                        <a href="{{ url_for('editar_cita', id=cita.id_cita) }}" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="{{ url_for('eliminar_cita', id=cita.id_cita) }}" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<script>
+
+    // Al cambiar especialidad, cargar médicos y precio
+    document.getElementById("select-especialidad").addEventListener("change", function () {
+        const idEspecialidad = this.value;
+        const medicoSelect = document.getElementById("select-medico");
+        medicoSelect.innerHTML = "<option>Cargando médicos...</option>";
+        document.getElementById("select-turno").innerHTML = '<option>Seleccione un médico</option>';
+        document.getElementById("select-hora").innerHTML = '<option>Seleccione un turno primero</option>';
+
+        // Cargar médicos
+        fetch(`/api/medicos/${idEspecialidad}`)
+            .then(r => r.json())
+            .then(data => {
+                medicoSelect.innerHTML = '<option value="">Seleccione un médico</option>';
+                if (data.medicos.length === 0) {
+                    medicoSelect.innerHTML += '<option>No hay médicos disponibles</option>';
+                } else {
+                    data.medicos.forEach(m => {
+                        const opt = document.createElement("option");
+                        opt.value = m.id_medico;
+                        opt.textContent = `${m.nombre} ${m.apellido}`;
+                        medicoSelect.appendChild(opt);
+                    });
+                }
+            });
+
+        // Cargar precio
+        fetch(`/api/precio_consulta/${idEspecialidad}`)
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById("precio-consulta").textContent = `Precio de consulta: S/ ${data.precio}`;
+            })
+            .catch(() => {
+                document.getElementById("precio-consulta").textContent = "Error al cargar precio";
+            });
+    });
+
+    // Al cambiar médico, cargar turnos
+    document.getElementById("select-medico").addEventListener("change", function () {
+        const idMedico = this.value;
+        const turnoSelect = document.getElementById("select-turno");
+        turnoSelect.innerHTML = "<option>Cargando turnos...</option>";
+        document.getElementById("select-hora").innerHTML = '<option>Seleccione un turno primero</option>';
+
+        fetch(`/api/turnos/${idMedico}`)
+            .then(r => r.json())
+            .then(data => {
+                turnoSelect.innerHTML = '<option value="">Seleccione un turno</option>';
+                if (data.turnos.length === 0) {
+                    turnoSelect.innerHTML = '<option>No hay turnos disponibles</option>';
+                } else {
+                    data.turnos.forEach(t => {
+                        const opt = document.createElement("option");
+                        opt.value = `${t.dia_semana}-${t.hora_inicio}-${t.hora_fin}`;
+                        opt.textContent = `${t.dia_semana}: ${t.hora_inicio} - ${t.hora_fin}`;
+                        turnoSelect.appendChild(opt);
+                    });
+                }
+            });
+    });
+
+    // Al seleccionar un turno, generar horas válidas
+    document.getElementById("select-turno").addEventListener("change", function () {
+        const valor = this.value;
+        const horaSelect = document.getElementById("select-hora");
+
+        if (!valor.includes("-")) {
+            horaSelect.innerHTML = '<option>Seleccione un turno válido</option>';
+            return;
+        }
+
+        const partes = valor.split("-");
+        const horaInicio = partes[1];
+        const horaFin = partes[2];
+        const horas = generarHoras(horaInicio, horaFin);
+
+        horaSelect.innerHTML = '';
+        horas.forEach(h => {
+            const opt = document.createElement("option");
+            opt.value = h;
+            opt.textContent = h;
+            horaSelect.appendChild(opt);
+        });
+    });
+
+    // Validación antes de enviar
+    document.querySelector("form").addEventListener("submit", function(e) {
+        const medico = document.getElementById("select-medico").value;
+        const hora = document.getElementById("select-hora").value;
+        if (!medico || !hora) {
+            e.preventDefault();
+            alert("Debe seleccionar médico y hora");
+        }
+    });
+
+    // Función que genera intervalos de hora cada 30 minutos
+function generarHoras(inicio, fin) {
+    const resultado = [];
+
+    const [hInicio, mInicio] = inicio.split(":").map(Number);
+    const [hFin, mFin] = fin.split(":").map(Number);
+
+    let actual = new Date();
+    actual.setHours(hInicio);
+    actual.setMinutes(mInicio);
+
+    const limite = new Date();
+    limite.setHours(hFin);
+    limite.setMinutes(mFin);
+
+    while (actual < limite) {
+        const horaStr = actual.toTimeString().slice(0, 5); // "HH:MM"
+        resultado.push(horaStr);
+        actual.setMinutes(actual.getMinutes() + 30); // Cambia a 15 si quieres intervalos más cortos
+    }
+
+    return resultado;
+}
+    </script>
+{% endblock %}

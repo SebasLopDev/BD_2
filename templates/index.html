@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+
+<header class="hero">
+
+    <div class="contenedor">
+
+        
+
+        <div class="text-contenedor">
+
+            <div class="text__hero">
+                
+              <h1>Clínica Medical</h1> 
+              <h4>Citas <span>online</span></h4> <!-- Cierre corregido -->
+              <h2>Agenda tu cita virtual</h2> <!-- Cambiado a h2 y cierre corregido -->
+              <p>Estamos preparados y a tu disposición para atender todo tipo de emergencias.</p> <!-- Cierre corregido -->
+        </div>                  
+                
+            
+
+        </div>
+        
+    </div>
+   
+</header>
+<main>
+    <!-- Servicios Section -->
+  <section class="py-5 text-center">
+    <div class="container">
+      <h2 class="mb-4">¿En qué podemos ayudarte hoy?</h2>
+      <div class="row g-4">
+        <div class="col-6 col-md-3">
+          <div class="card-service">
+            <div class="img-wrapper">
+              <img src="./static/images/1.png" alt="Emergencias">
+            </div>
+            <h5>Emergencias</h5>
+            <p class="text-muted">Servicio de atención 24/7</p>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card-service">
+            <div class="img-wrapper">
+              <img src="/static/images/2.png" alt="Programas Maternos">
+            </div>
+            <h5>Programas Maternos</h5>
+            <p class="text-muted">Cuidado para mamá y bebé</p>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card-service">
+            <div class="img-wrapper">
+              <img src="/static/images/3.png" alt="Reserva una cita">
+            </div>
+            <h5>Reserva una cita</h5>
+            <p class="text-muted">Agenda tu consulta en línea</p>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card-service">
+            <div class="img-wrapper">
+              <img src="/static/images/4.png" alt="Servicios Complementarios">
+            </div>
+            <h5>Servicios Complementarios</h5>
+            <p class="text-muted">Terapias y diagnósticos avanzados</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Instalaciones Gallery -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <div class="section-header text-center mb-4">
+        <h2>Nuestras Instalaciones</h2>
+        <p class="text-muted">Conoce el moderno equipamiento y espacios</p>
+      </div>
+      <div class="row g-3 gallery">
+        <!-- 2 columnas en todas las resoluciones -->
+        <div class="col-6 col-md-6">
+          <div class="gallery-item">
+            <img src="/static/images/10.jpg" alt="Ambulancia">
+          </div>
+        </div>
+        <div class="col-6 col-md-6">
+          <div class="gallery-item">
+            <img src="/static/images/6.jpg" alt="Quirófano">
+          </div>
+        </div>
+        <div class="col-6 col-md-6">
+          <div class="gallery-item">
+            <img src="/static/images/9.jpg" alt="Laboratorio">
+          </div>
+        </div>
+        <div class="col-6 col-md-6">
+          <div class="gallery-item">
+            <img src="/static/images/8.jpg" alt="Sala de recuperación">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Doctores Destacados -->
+  <section class="py-5">
+    <div class="container">
+      <div class="section-header text-center mb-4">
+        <h2>Conoce a algunos de nuestros Doctores</h2>
+        <p class="text-muted">Especialistas comprometidos con tu salud</p>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-middle custom-table">
+          <thead class="bg-primary text-white">
+            <tr>
+              <th>#</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for doc in doctores %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ doc.nombre }}</td>
+              <td>{{ doc.apellido }}</td>
+              <td>{{ doc.email }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>            {# cierra .container #}
+  </section>         {# cierra la sección #}
+
+    
+    
+    
+    
+    
+    
+</main>
+
+
+{% endblock %}

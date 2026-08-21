@@ -1,0 +1,56 @@
+{% extends 'base_medico.html' %}
+
+{% block title %}Editar diagnostico{% endblock %}
+
+{% block content %}
+
+<main class="container-pagina">
+    <div class="contenedor-nav">
+
+        <nav class="nav">
+            <a href="{{ url_for('pagina_medico') }}">Mi horario</a>
+            <a href="{{ url_for('listar_diagnosticos') }}">Consultar pacientes</a>
+            <a href="{{ url_for('crear_diagnostico') }}">Registrar Diagnostico</a>               
+            <a href="{{ url_for('logout') }}">Cerrar sesión</a>            
+                    
+        </nav>
+    </div>
+
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                <div class="alert alert-{{ categoria }} alert-dismissible fade show mt-3 mx-3" role="alert">
+                    {{ mensaje }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="container mt-4">
+            <h4>Editar Diagnóstico</h4>
+            <form method="post">
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea name="descripcion_dgnstico" class="form-control" required>{{ diagnostico.descripcion_dgnstico }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Enfermedad</label>
+                    <select name="id_enfermedad" class="form-control" required>
+                        {% for e in enfermedades %}
+                            <option value="{{ e.id_enfermedad }}" {% if e.id_enfermedad == diagnostico.id_enfermedad %}selected{% endif %}>
+                                {{ e.nombre_enfrmdad }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                <a href="{{ url_for('listar_diagnosticos') }}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+
+    
+</main>    
+
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'admin_base.html' %}
+{% block title %}Reporte de Pacientes{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="mb-4">Reporte de Pacientes</h2>
+
+  <form method="get" class="row g-3 align-items-end mb-4">
+    <div class="col-md-3">
+      <label>Desde (Nac.)</label>
+      <input type="date" name="desde" value="{{ filtros.desde }}" class="form-control">
+    </div>
+    <div class="col-md-3">
+      <label>Hasta (Nac.)</label>
+      <input type="date" name="hasta" value="{{ filtros.hasta }}" class="form-control">
+    </div>
+    <div class="col-md-2">
+      <label>Sexo</label>
+      <select name="sexo" class="form-select">
+        <option value="">Todos</option>
+        <option value="M" {% if filtros.sexo=='M' %}selected{% endif %}>M</option>
+        <option value="F" {% if filtros.sexo=='F' %}selected{% endif %}>F</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label>Buscar</label>
+      <input type="text" name="texto" placeholder="Nombre, Apellido o DNI"
+             value="{{ filtros.texto }}" class="form-control">
+    </div>
+    <div class="col-md-1 text-end">
+      <button type="submit" class="btn btn-primary">Filtrar</button>
+    </div>
+    <div class="col-md-1 text-end">
+        <a href="{{ url_for(
+            'reporte_pacientes',
+            desde=filtros.desde,
+            hasta=filtros.hasta,
+            sexo=filtros.sexo,
+            texto=filtros.texto,
+            export='excel')
+            }}"
+        class="btn btn-success">Excel</a>
+    
+    </div>
+  </form>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Fecha Nac.</th><th>ID</th><th>Nombre</th><th>Apellido</th>
+        <th>DNI</th><th>Sexo</th><th>Email</th><th>Usuario Sistema</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in pacientes %}
+      <tr>
+        <td>{{ p.fecha_nacimiento }}</td>
+        <td>{{ p.id_paciente }}</td>
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.apellido }}</td>
+        <td>{{ p.dni }}</td>
+        <td>{{ p.sexo }}</td>
+        <td>{{ p.email_paciente }}</td>
+        <td>{{ p.usuario_sistema }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,907 @@
+:root{
+    --color-beige:#F9EFDB;
+   
+}
+
+html{
+    box-sizing: border-box;    
+    overflow-x: hidden;
+}
+
+body{
+    position: relative;
+    overflow-x: hidden;
+    font-size: 16px;
+    font-family: Roboto, sans-serif;
+    font-weight: 700;
+    line-height: 2;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #ebe7de;
+}
+
+/* SECCIÓN CLAVE: El contenedor central se estira de forma flexible 
+   y empuja al footer al fondo de manera limpia sin encimarse */
+.contenido-principal { 
+    flex: 1 0 auto; 
+}
+
+/*globales*/
+h1{
+    font-size: 4rem;;
+    /*color:white;*/
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    
+}
+h2,h3,h4{
+    
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+}
+
+h2{
+    font-size: 3rem;
+}
+h3{
+    font-size: 3rem;
+    
+}
+h4{
+    font-size: 2rem;
+   
+}
+
+a{
+    text-decoration: none;
+    display: block;
+    font-size: 1.2rem;
+}
+
+.nav a{
+    color: var(--color-beige); /* Color del enlace */
+    /* Sin subrayado */
+    transition: color 0.3s;
+    padding: 0 .3rem;
+}
+a:hover {
+    color:rgb(113, 240, 212); /* Cambio de color al pasar el mouse */
+    /*border-bottom:.1rem solid beige;*/
+}
+ 
+
+
+
+img{   
+    
+    display:block;
+}
+
+.hero{
+    position:relative;
+    background-image: url(../images/portada1.jpg) ; 
+      
+    height: 40rem;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    overflow: hidden;
+    
+}
+
+.contenedor{   
+     
+    background: linear-gradient(135deg, rgba(186, 186, 190, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%);     
+    height: 100%;   
+    margin:0 auto;
+    padding: 0 1rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    
+    
+}
+.contenedor2{
+    width: 60rem;
+    margin: auto auto;
+}
+.contenedor__hero{
+    display: flex;
+    justify-content:center;
+    margin:0;
+    
+}
+.contenedor-logo{
+    display: flex;
+    justify-content: center;
+    
+}
+
+.text-contenedor{    
+    /*falta uno para cambiar */
+    width: 100%;
+}
+/* --- SECCIÓN HERO PROFESIONAL --- */
+.text-contenedor {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 80px 40px;
+    min-height: 50vh;
+    
+    border-radius: 12px;
+    margin: 20px auto;
+    max-width: 1200px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    font-family: 'Inter', sans-serif;
+}
+
+.text__hero {
+    max-width: 600px;
+}
+
+.text__hero h1 {
+    font-size: 4rem;
+    font-weight: 800;
+    color: #1a365d; /* Azul corporativo médico */
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+}
+
+.text__hero h4 {
+    font-size: 1.5rem;
+    color: #2b6cb0;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+/* Resaltado de la palabra Online */
+.text__hero h4 span {
+    background-color: #e2f8f5;
+    color: #2c7a7b; /* Verde médico */
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.text__hero h2 {
+    font-size: 1.8rem;
+    color: #2d3748;
+    font-weight: 700;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.text__hero p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #4a5568; /* Gris suave de alta legibilidad */
+    margin-bottom: 0;
+}
+
+.contenedor-nav{
+    display: flex;
+    justify-content: space-between;
+    
+    background-color:#2c3e50;
+    height: 5rem;
+    margin: 0;
+    position: fixed;
+    top: 0; /* Ajusta la distancia desde el borde superior */
+    right: 0; /* Ajusta la distancia desde el borde derecho */
+    bottom: 0; /* Ajusta la distancia desde el borde inferior */
+    left: 0; /* Ajusta la distancia desde el borde izquierdo */
+    z-index: 5;
+}
+
+.nav{    
+    
+    gap:3rem;
+    align-items: flex-start;
+    margin:2rem 2rem;
+}
+.logo{
+    width: 12rem;
+    height: 12rem;
+    object-fit: cover;
+    margin: 0;
+    
+    
+}
+.log{
+    height: 20rem;
+}
+.main{
+    position: relative;
+    display: flex;
+    max-width:130rem;
+    flex-direction: column;
+    margin: 0 auto;
+    overflow-x: hidden;
+}
+.titulo{
+    text-align: center;
+}
+.container_loginMain{
+    display: flex;
+    flex-direction: column;
+    margin: 5rem 10rem 0rem 10rem;
+    padding: 2rem;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.image_login{
+    width: 25rem;
+    height: auto;
+    object-fit:cover;
+    margin-top:3rem;
+    border-radius:15px 15px 0px 0px;
+    height: 25rem;
+    
+}
+.contenedor_login{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: auto;
+    gap: 3rem;
+    width: 100%;
+    
+   
+}
+.cont_reg {
+    background-color:#507ea3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5rem;
+    padding: 1.5rem;
+    width: 53rem;
+    color: beige;
+    border-radius: 2rem;
+}
+
+.cont_reg:hover {
+    background-color: #1f3446; /* un azul más oscuro */
+}
+.cont_reg a{
+    color: beige;
+    text-decoration: none;
+}
+a:hover .sub_reg {
+    background-color:#1f3446;
+}
+.sub_reg{
+    
+    background-color:#507ea3;
+    width: 100%;
+    padding: 2rem;
+    color:beige
+    
+}
+.reg_medico a{
+    text-decoration: none;    
+   
+}
+.reg_paciente a{
+    text-decoration: none;    
+   
+}
+
+
+.container_registro{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 7.5rem;
+    margin-bottom: 30rem;
+    flex-direction: column;
+}
+
+.container_registro{
+  max-width: 37.5rem; /* 600px */
+  margin: 5rem auto;
+  
+  padding: 3rem 2rem;
+  border-radius: var(--radio);
+  
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 20rem;
+}
+
+.container_registro h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  color: var(--azul-oscuro);
+  margin-bottom: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+}
+
+.formulario-registro,
+.formLogin {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+
+.formulario-registro input,
+.formulario-registro select,
+.formLogin input,
+.formLogin select {
+  padding: 0.8rem 1rem;
+  border: 0.0625rem solid var(--borde-suave); /* 1px */
+  border-radius: var(--radio);
+  font-size: 1rem;
+  background-color: #fff;
+  color: var(--gris-texto);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.formulario-registro input:focus,
+.formulario-registro select:focus,
+.formLogin input:focus,
+.formLogin select:focus {
+  border-color: var(--azul-principal);
+  box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
+.formulario-registro label,
+.formLogin label {
+  font-weight: 600;
+  color: var(--azul-oscuro);
+  font-size: 1rem;
+}
+
+.formulario-registro button,
+.formLogin button {
+  background-color:#507ea3 ;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: var(--radio);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+  transition: background-color 0.3s ease;
+}
+
+.formulario-registro button:hover,
+.formLogin button:hover {
+  background-color:#1f3446;
+  cursor: pointer;
+}
+.container_registrar{
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    gap: 3rem;
+    padding: 5rem;
+    background-color:#ebe7de;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    
+}
+.image_registrar{
+    height: 50rem;
+    object-fit: cover;
+    background-size: cover;
+}
+.form-container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 8rem;
+    margin-bottom: 22rem;
+}
+
+.formLogin-container{
+    max-width: 37.5rem; /* 600px */
+    margin: 3rem auto 22rem auto;    
+    padding: 3rem 2rem;    
+    font-family: 'Inter', sans-serif;
+    
+}
+.TitleLog{    
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.container-pagina{
+    margin-top: 6rem;
+    margin-bottom: 30rem;
+}
+
+.container_nueva_listado{
+    display: flex;
+    padding-top: 3rem;
+    padding-left: 15rem;
+    padding-right: 15rem;
+    flex-direction: column;
+    margin-bottom:25rem;
+    
+
+}
+
+/*ebert*/
+/* Hero */
+    
+
+    /* Servicio: contenedor de imagen */
+    .img-wrapper {
+      width: 80px;
+      height: 80px;
+      overflow: hidden;
+      margin: 0 auto 1rem;
+    }
+    .img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Servicios */
+    .card-service {
+      border: none;
+      transition: transform 0.3s;
+      background: #f8f9fa;
+      padding: 1.5rem;
+    }
+    .card-service:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    /* Galería: contenedor con proporción fija */
+    .gallery-item {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;        /* 4:3; cámbialo a 1/1 si prefieres cuadrado */
+      overflow: hidden;
+      border-radius: .5rem;
+    }
+    .gallery-item img {
+      padding: 1rem;
+      position: absolute;
+      inset: 0;                   /* top:0; right:0; bottom:0; left:0 */
+      width: 100%;
+      height: 100%;
+      object-fit: cover;          /* cubre todo, recortando si es necesario */
+      object-position: center;
+      border-radius: 1rem;
+    }
+
+    /* Doctores Destacados */
+    .doctor-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-top-left-radius: .5rem;
+      border-top-right-radius: .5rem;
+    }
+
+    /* Testimonios */
+    .testimonial {
+      background: #f1f1f1;
+      padding: 2rem;
+      border-radius: .5rem;
+    }
+
+    /* CTA button */
+    .btn-primary {
+      background-color: #5a0c91;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #45086d;
+    }
+    .custom-table td:nth-child(2),
+    .custom-table td:nth-child(3) {
+        color: #5a0c91;
+    }
+    .h1{
+        text-align: center;
+    }
+       
+
+/*edgar */
+
+/* Imagen con texto encima */
+.seccion-imagen-texto {
+    position: relative;
+    text-align: center;
+    margin-bottom: 3rem;
+    overflow: visible;
+    z-index: 1;
+}
+
+.contenedor-imagen-texto {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+    height: 400px;
+    overflow: hidden;
+}
+
+.imagen-ambulancia {
+    width: 60%;
+    height: 100%;
+    object-fit: cover;
+    -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0.1) 85%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0.1) 85%, rgba(0, 0, 0, 0) 100%);
+}
+
+.texto-encima {
+    width: 45%;
+    background-color: white;
+    padding: 6rem 2rem 6rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+
+    .texto-encima h1 {
+        font-size: 2.3rem;
+        line-height: 1.2;
+        margin: 0;
+        color: #222;
+        text-indent: 1.5rem;
+        word-break: keep-all;
+        white-space: normal;
+    }
+
+    .texto-encima .subtitulo {
+        font-size: 1.1rem;
+        margin-top: 1.2rem;
+        color: #555;
+        text-indent: 1.5rem;
+        line-height: 1.4;
+    }
+
+
+/* Frases destacadas */
+.seccion-frases {
+    background-color: #f5f5f5;
+    padding: 3rem 1rem;
+}
+
+.contenedor-frases {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2rem;
+}
+
+.frase {
+    background-color: #ffffff;
+    padding: 1.8rem 2rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    border-radius: 10px;
+    font-size: 1.2rem;
+    color: #444;
+    max-width: 700px;
+    width: 100%;
+}
+
+/* Viñetas con enlaces */
+.seccion-vinetas {
+    padding: 2rem 2rem 4rem;
+    background-color: #f5f5f5;
+    text-align: center;
+    margin-top: 8rem;
+    position: relative;
+    z-index: 2;
+}
+
+    .seccion-vinetas h2 {
+        font-size: 2rem;
+        color: #2e2e2e;
+        margin-bottom: 2.5rem;
+        font-family: 'Georgia', serif;
+        font-weight: 600;
+    }
+
+.contenedor-vinetas {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    padding: 0 2rem;
+}
+
+.vineta-link {
+    text-decoration: none;
+    color: inherit;
+    flex: 1 1 280px;
+    max-width: 320px;
+    transition: transform 0.3s ease;
+}
+
+.vineta {
+    background: linear-gradient(145deg, #ffffff, #f1f1f1);
+    padding: 2rem;
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Georgia', serif;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.vineta:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+}
+
+.vineta h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: #007bff;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.vineta p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.4;
+}
+
+/* Resultados */
+.resultados-medicos {
+    padding-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.card-medico {
+    background-color: #f1f1f1;
+    border-radius: 6px;
+    padding: 16px;
+    border: 1px solid #ccc;
+    font-family: 'Inter', sans-serif;
+    box-shadow: none; /* Sin sombra */
+    transition: none; /* Sin animación */
+}
+
+.card-medico h4 {
+    margin-bottom: 6px;
+    color: #212529;
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.card-medico p {
+    margin: 4px 0;
+    color: #444;
+    font-size: 15px;
+}
+
+.no-resultados {
+    text-align: center;
+    margin-top: 30px;
+    color: #888;
+    font-style: italic;
+    font-family: 'Inter', sans-serif;
+}
+
+.formulario-busqueda select {
+    width: 100%;
+    min-width: 300px; /* o lo que prefieras */
+    max-width: 100%;
+    box-sizing: border-box;
+    white-space: normal;
+
+}
+
+
+.formulario-registro,
+.formLogin {
+    display: flex;
+    flex-direction: column;
+    gap: 1.3rem;
+}
+
+.formulario-registro input,
+.formulario-registro select,
+.formLogin input,
+.formLogin select {
+    padding: 0.5rem 1rem;
+    border: 0.0625rem solid var(--borde-suave); /* 1px */
+    border-radius: var(--radio);
+    font-size: 1rem;
+    background-color: #fff;
+    color: var(--gris-texto);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.formulario-registro input:focus,
+.formulario-registro select:focus,
+.formLogin input:focus,
+.formLogin select:focus {
+    border-color: var(--azul-principal);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.2);
+    outline: none;
+}
+
+.formulario-registro label,
+.formLogin label {
+font-weight: 600;
+color: var(--azul-oscuro);
+font-size: 1rem;
+}
+
+.formulario-registro button,
+.formLogin button {
+    background-color: #507ea3;
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: var(--radio);
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.05rem;
+    transition: background-color 0.3s ease;
+}
+
+.formulario-registro button:hover,
+.formLogin button:hover {
+    background-color: #1f3446;
+    cursor: pointer;
+}
+
+#id_especialidad {
+    min-width: 280px;
+    font-size: 1rem;
+}
+
+/* Sección general */
+.seccion-especialidades {
+    padding: 7rem 3rem;
+    padding-bottom: 27rem;
+}
+
+.contenedor-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+}
+
+/* Listado */
+.listado-especialidades h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.listado-especialidades ul {
+    list-style: none;
+    padding: 0;
+}
+
+.boton-especialidad {
+    display: block;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.5rem;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    font-size: 1rem;
+}
+
+    .boton-especialidad:hover {
+        background-color: #e0f0ff;
+        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+    }
+
+/* Descripción */
+.descripcion-especialidad {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.descripcion-especialidad h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.descripcion-especialidad p {
+    font-size: 1.1rem;
+    color: #444;
+    line-height: 1.6;
+}
+.cont-nosotros{
+    margin-top: 5rem;
+}
+
+/* --- ESTILOS DEL FOOTER --- */
+.site-footer {
+    background-color: #2c3e50; /* Color oscuro profesional */
+    color: #ffffff;
+    padding: 40px 20px 20px 20px;
+    margin-top: 50px; /* Separa el footer del contenido principal */
+    font-family: 'Inter', sans-serif;
+}
+
+/* Contenedor de las 3 columnas */
+.contenedor-footer {
+    display: flex;
+    text-align: center;
+    justify-content: space-around; /* Distribuye las columnas equitativamente */
+    flex-wrap: wrap; /* Hace que se adapte a celulares */
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 20px;
+}
+
+/* Cada columna individual */
+.footer-column {
+    flex: 1;
+    min-width: 250px; /* Evita que se compriman demasiado */
+    margin-bottom: 20px;
+}
+
+.footer-column h4 {
+    font-size: 1.2rem;
+    color: #4ed1c5; /* Un tono verde/azul médico para destacar títulos */
+    margin-bottom: 15px;
+    border-bottom: 2px solid #2c3e4e;
+    padding-bottom: 5px;
+}
+
+.footer-column p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 8px;
+    color: #ecf0f1;
+}
+
+/* Botón de llamada */
+.footer-btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: white !important;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 5px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.footer-btn:hover {
+    background-color: #0056b3;
+    text-decoration: none;
+}
+
+/* Alerta de Domingo Cerrado */
+.text-alert {
+    color: #e74c3c !important; /* Texto rojo */
+}
+
+/* Sección inferior de Copyright */
+.footer-copyright {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #2c3e50;
+    font-size: 0.85rem;
+    color: #bdc3c7;
+}

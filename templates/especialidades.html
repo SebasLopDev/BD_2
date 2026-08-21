@@ -1,0 +1,45 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Especialidades - Clínica{% endblock %}
+
+{% block content %} 
+
+
+<section class="seccion-especialidades">
+    <div class="contenedor-grid">
+        <!-- Listado a la izquierda -->
+        <div class="listado-especialidades">
+            <h2>Especialidades</h2>
+            <ul>
+                 {% for especialidad in especialidades %}
+                <button class="boton-especialidad" data-descripcion="{{ especialidad.descripcion_espclidad }}">
+                    {{ especialidad.nombre_espclidad }}
+                </button>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Descripción a la derecha -->
+        <div class="descripcion-especialidad">
+            <h3>Descripción</h3>
+            <p id="descripcion-texto">Selecciona una especialidad para ver la descripción.</p>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const botones = document.querySelectorAll(".boton-especialidad");
+        const parrafoDescripcion = document.getElementById("descripcion-texto");
+
+        botones.forEach(boton => {
+            boton.addEventListener("click", function () {
+                const texto = this.getAttribute("data-descripcion");
+                parrafoDescripcion.textContent = texto;
+            });
+        });
+    });
+</script>
+    
+
+{% endblock %}

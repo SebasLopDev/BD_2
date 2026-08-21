@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Panel Admin{% endblock %} | Mi Clínica</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+  {% block navbar %}
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('admin_panel') }}">Mi Clínica Admin</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="adminNavbar">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('modificar_paciente') }}">Pacientes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('modificar_doctor') }}">Doctores</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('reporte_pacientes') }}">Reportes</a>
+        </li>
+          
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{{ url_for('admin_logout') }}">
+              <i class="bi bi-box-arrow-right"></i> Salir
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  {% endblock %}
+
+  <!-- Bloque de mensajes flash -->
+  <div class="container mt-3">
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+      {% if mensajes %}
+        {% for categoria, texto in mensajes %}
+          <div class="alert alert-{{ categoria }} alert-dismissible fade show" role="alert">
+            {{ texto }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <main class="flex-grow-1 my-4">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="bg-light py-3 mt-auto">
+    <div class="container text-center">
+      <small class="text-muted">&copy; 2025 Mi Clínica. Todos los derechos reservados.</small>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica Médica</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <!-- jQuery (requerido por Bootstrap 4) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Popper.js (requerido por Bootstrap 4 para componentes como tooltips) -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <!-- Bootstrap 4 JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <!-- Enlace al archivo CSS (estático) -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">    
+    
+</head>
+<body>
+    
+    <main class="container-pagina">
+        <div class="contenedor-nav">
+
+            <nav class="nav">
+                <a href="{{ url_for('pagina_paciente') }}">Mis datos</a>
+                <a href="{{ url_for('consultar_especialidades')}}">Consultar Especialidades</a>
+                <a href="{{ url_for('nueva_cita') }}">Reservar Cita</a>
+                <a href="{{ url_for('logout') }}">Cerrar sesión</a>            
+                
+            </nav>
+        </div>
+
+        
+
+    <div class="formLogin-container">
+
+
+        <div class="TitleLog">
+            <h4>Buscar médicos por especialidad</h4>
+
+        </div>
+
+        <form method="POST" class="formLogin">
+            <label for="id_especialidad">Selecciona una especialidad:</label>
+            <select name="id_especialidad" id="id_especialidad" class="form-control">
+                <option value="">-- Todas --</option>
+                {% for esp in especialidades %}
+                <option value="{{ esp.id_especialidad }}"
+                        {% if especialidad_seleccionada == esp.id_especialidad %} selected {% endif %}>
+                    {{ esp.nombre_espclidad }}
+                </option>
+                {% endfor %}
+            </select>
+
+
+            <label>Buscar por palabra clave:</label>
+            <input type="text" name="palabra_clave" placeholder="Nombre o apellido del médico">
+
+            <button type="submit">Buscar</button>
+        </form>
+
+        <!-- Resultados -->
+        {% if doctores %}
+        <div class="resultados-medicos">
+            {% for doc in doctores %}
+            <div class="card-medico">
+                <h4>{{ doc.nombre }} {{ doc.apellido }}</h4>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="no-resultados">No se encontraron médicos con los criterios seleccionados.</p>
+        {% endif %}
+    </div>
+
+    
+
+    <!-- Bloque de contenido que se reemplazará en cada página específica -->
+        
+    </main>
+
+    <footer class="footer">
+        <div class="contenedor-footer">
+            <div class="footer-ubicacion">
+                <h4>Ubicación</h4>                
+                <p>Avenida del Aroma 123,</p>
+                <p>Barrio Aromático</p>
+                <p>CP 45678</p>
+            </div>
+            <div class="footer-box reservacion">
+                <h4>Reservación</h4>
+                <p>Tel. 3850-9102</p>
+                <p>Llamar</p>
+            </div>
+            <div class="footer-box horario">
+                <h4>Horario</h4>
+                <p>Lun-Jue: 11:00 - 22:00</p>
+                <p>Vie-Sab: 09:00 - 24:00</p>
+                <p>Domingo: Cerrado</p>
+            </div>
+        </div>
+        <p class="copyright">Todos los derechos reservados. Clínica Medical</p>
+    </footer>
+</body>
+</html>

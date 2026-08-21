@@ -1,0 +1,158 @@
+{% extends 'base_paciente.html' %}
+
+{% block title %}Editar-cita{% endblock %}
+
+{% block content %}
+    
+    <main class="container-pagina">
+        <div class="contenedor-nav">
+
+            <nav class="nav">
+                <a href="{{ url_for('pagina_paciente') }}">Mis datos</a>
+                <a href="{{ url_for('consultar_especialidades') }}">Consultar Especialidades</a>
+                <a href="{{ url_for('nueva_cita') }}">Reservar Cita</a>
+                <a href="{{ url_for('logout') }}">Cerrar sesión</a>            
+                
+            </nav>
+        </div>
+
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                <div class="alert alert-{{ categoria }} alert-dismissible fade show mt-3 mx-3" role="alert">
+                    {{ mensaje }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+         
+
+         <h2>Editar Cita</h2>
+
+        <div class="container_nueva_listado">
+
+
+            <form method="post">
+            <div class="form-group">
+                <label>Fecha:</label>
+                <input type="date" name="fecha" class="form-control" value="{{ cita.fecha }}" required>
+            </div>
+            <div class="form-group">
+                <label>Hora:</label>
+                <input type="time" name="hora" class="form-control" value="{{ cita.hora }}" required>
+            </div>
+            <div class="form-group">
+                <label>Motivo:</label>
+                <input type="text" name="motivo" class="form-control" value="{{ cita.motivo }}" required>
+            </div>
+
+            <!-- Especialidad -->
+            <div class="form-group">
+                <label>Especialidad:</label>
+                <select name="id_especialidad" id="select-especialidad" class="form-control" required>
+                    <option value="">Seleccione una especialidad</option>
+                    {% for esp in especialidades %}
+                        <option value="{{ esp.id_especialidad }}" {% if esp.id_especialidad == cita.id_especialidad %}selected{% endif %}>
+                            {{ esp.nombre_espclidad }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Médico -->
+            <div class="form-group">
+                <label>Médico:</label>
+                <select name="id_medico" id="select-medico" class="form-control" required>
+                    <option value="">Seleccione una especialidad primero</option>
+                </select>
+            </div>
+            <!--
+            <div class="form-group">
+                <label>Médico:</label>
+                <select name="id_medico" class="form-control">
+                {% for medico in medicos %}
+                <option value="{{ medico.id_medico }}" {% if cita.id_medico == medico.id_medico %}selected{% endif %}>
+                    {{ medico.nombre }} {{ medico.apellido }}
+                </option>
+                {% endfor %}
+                </select>
+            </div>-->
+            <div class="form-group">
+                <label>Sala (opcional):</label>
+                <select name="id_sala" class="form-control">
+                <option value="">-- Sin asignar --</option>
+                {% for sala in salas %}
+                <option value="{{ sala.id_sala }}" {% if cita.id_sala == sala.id_sala %}selected{% endif %}>
+                    {{ sala.nombre }} ({{ sala.tipo }})
+                </option>
+                {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Guardar cambios</button>
+            <a href="{{ url_for('nueva_cita') }}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>        
+
+    
+
+    <!-- Bloque de contenido que se reemplazará en cada página específica -->
+        
+    </main>    
+   
+
+<script>
+    // Función para cargar médicos de una especialidad
+    function cargarMedicos(idEspecialidad, idMedicoActual = null) {
+        const medicoSelect = document.getElementById("select-medico");
+        medicoSelect.innerHTML = "<option>Cargando médicos...</option>";
+
+        fetch(`/api/medicos/${idEspecialidad}`)
+            .then(r => r.json())
+            .then(data => {
+                medicoSelect.innerHTML = '<option value="">Seleccione un médico</option>';
+                if (data.medicos.length === 0) {
+                    medicoSelect.innerHTML += '<option>No hay médicos disponibles</option>';
+                } else {
+                    data.medicos.forEach(m => {
+                        const opt = document.createElement("option");
+                        opt.value = m.id_medico;
+                        opt.textContent = `${m.nombre} ${m.apellido}`;
+                        if (idMedicoActual && m.id_medico == idMedicoActual) {
+                            opt.selected = true;
+                        }
+                        medicoSelect.appendChild(opt);
+                    });
+                }
+            });
+    }
+
+    // Evento: cuando se cambie la especialidad
+    document.getElementById("select-especialidad").addEventListener("change", function () {
+        const idEspecialidad = this.value;
+        cargarMedicos(idEspecialidad);
+    });
+
+    // Precargar al cargar la página si ya hay una especialidad
+    window.addEventListener("load", function () {
+        const selectEspecialidad = document.getElementById("select-especialidad");
+        const idEspecialidad = selectEspecialidad.value;
+        const idMedicoActual = "{{ cita.id_medico }}";
+        if (idEspecialidad) {
+            cargarMedicos(idEspecialidad, idMedicoActual);
+        }
+    });
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+

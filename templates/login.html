@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+
+<main class=container_loginMain>
+
+    
+    <h4>Selecciona tu tipo de Usuario</h4>
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+        {% if mensajes %}
+            {% for categoria, mensaje in mensajes %}
+            <div class="alert alert-{{ categoria }} alert-dismissible fade show mt-3 mx-3" role="alert">
+                {{ mensaje }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="contenedor_login">
+
+        <!-- MÉDICO -->
+        <div class="reg_paciente">
+            <img class="image_login" src="./static/images/paciente.jpg" alt="Médico">
+            <a href="{{ url_for('login_paciente') }}">
+                <div class="sub_reg">
+                    <p>Ingresa como</p>
+                    <h4>PACIENTE</h4>
+                </div>
+            </a>
+        </div>
+
+        <!-- PACIENTE -->
+        <div class="reg_medico">
+            <img class="image_login" src="./static/images/medico.jpg" alt="paciente">
+            <a href="{{ url_for('login_medico') }}">
+                <div class="sub_reg">
+                    <p>Ingresa como</p>
+                    <h4>MÉDICO</h4>
+                </div>
+            </a>
+        </div>
+    </div>  
+
+    <!-- REGISTRO -->
+    <div class="cont_reg">
+        <h3><a href="{{ url_for('registrar') }}">¡SI AUN NO TIENES CUENTA, REGÍSTRATE!</a></h3>
+    </div>
+</main>
+
+
+
+
+
+
+
+{% endblock %}

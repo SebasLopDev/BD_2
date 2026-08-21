@@ -1,0 +1,79 @@
+{% extends 'base_medico.html' %}
+
+{% block title %}listar diagnostico{% endblock %}
+
+{% block content %}
+
+<main class="container-pagina">
+    <div class="contenedor-nav">
+
+            <nav class="nav">
+                <a href="{{ url_for('pagina_medico') }}">Mi horario</a>
+                <a href="{{ url_for('listar_diagnosticos') }}">Consultar pacientes</a>
+                <a href="{{ url_for('crear_diagnostico') }}">Registrar Diagnostico</a>
+                          
+                <a href="{{ url_for('logout') }}">Cerrar sesión</a>            
+                
+            </nav>
+    </div>
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                <div class="alert alert-{{ categoria }} alert-dismissible fade show mt-3 mx-3" role="alert">
+                    {{ mensaje }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+    
+
+    <div class="container mt-4">
+        <h4 class="mb-3">Diagnósticos Registrados</h4>    
+
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>Paciente</th>
+                    <th>Fecha</th>
+                    <th>Enfermedad</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in diagnosticos %}
+                <tr>
+                    <td>{{ d.nombre_paciente }} {{ d.apellido_paciente }}</td>
+                    <td>{{ d.fecha }}</td>
+                    <td>{{ d.nombre_enfrmdad }}</td>
+                    <td>{{ d.descripcion_dgnstico }}</td>
+                    <td>
+                        <a href="{{ url_for('editar_diagnostico', id=d.id_diagnostico) }}" class="btn btn-sm btn-primary">Editar</a>
+                        <a href="{{ url_for('eliminar_diagnostico', id=d.id_diagnostico) }}" class="btn btn-sm btn-danger"
+                        onclick="return confirm('¿Seguro que deseas eliminar este diagnóstico?')">Eliminar</a>
+                        <a href="{{ url_for('ver_medicamentos_diagnostico', id=d.id_diagnostico) }}" class="btn btn-sm btn-info">Medicamentos</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">No hay diagnósticos registrados aún.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+</main>
+
+
+
+
+{% endblock %}

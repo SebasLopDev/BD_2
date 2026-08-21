@@ -1,0 +1,52 @@
+{% extends 'base_medico.html' %}
+
+{% block title %}Editar Medicamentos{% endblock %}
+
+{% block content %}
+
+<main class="container-pagina">
+    <div class="contenedor-nav">
+
+            <nav class="nav">
+                <a href="{{ url_for('pagina_medico') }}">Mi horario</a>
+                <a href="{{ url_for('listar_diagnosticos') }}">Consultar pacientes</a>
+                <a href="{{ url_for('crear_diagnostico') }}">Registrar Diagnostico</a>           
+                <a href="{{ url_for('logout') }}">Cerrar sesión</a>            
+                
+            </nav>
+    </div>
+
+    
+
+    
+    <h4>Editar Medicamento</h4>
+    <form method="POST">
+        <label>Nombre:</label>
+        <input type="text" name="nombre_medcmnto" value="{{ medicamento.nombre_medcmnto }}" required class="form-control">
+
+        <label>Presentación:</label>
+        <select name="presentacion" class="form-control">
+            <option value="CAPSULA" {% if medicamento.presentacion == 'CAPSULA' %}selected{% endif %}>Cápsula</option>
+            <option value="JARABE" {% if medicamento.presentacion == 'JARABE' %}selected{% endif %}>Jarabe</option>
+            <option value="INYECTABLE" {% if medicamento.presentacion == 'INYECTABLE' %}selected{% endif %}>Inyectable</option>
+            <option value="MASTICABLE" {% if medicamento.presentacion == 'MASTICABLE' %}selected{% endif %}>Masticable</option>
+        </select>
+
+        <label>Descripción:</label>
+        <textarea name="descrip_medcmnto" class="form-control">{{ medicamento.descrip_medcmnto }}</textarea>
+
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </form>
+    {% endblock %}
+
+
+
+
+
+
+</main>
+
+
+
+
+{% endblock %}

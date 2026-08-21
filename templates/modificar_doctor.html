@@ -1,0 +1,104 @@
+{% extends 'admin_base.html' %}
+{% block title %}Administrar Doctores{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="mb-4">Administrar Doctores</h2>
+
+  <!-- Formulario Agregar -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Agregar Nuevo Doctor</h5>
+      <form method="post" class="row g-3">
+        <input type="hidden" name="action" value="add">
+
+        <div class="col-md-4">
+          <label class="form-label">Nombre</label>
+          <input name="nombre" class="form-control" placeholder="Nombre" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Apellido</label>
+          <input name="apellido" class="form-control" placeholder="Apellido" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Email (doctor)</label>
+          <input name="email" type="email" class="form-control" placeholder="Email" required>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Estado</label>
+          <select name="estado" class="form-select">
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+        </div>
+        <!-- Campos de Usuario asociado -->
+
+        <div class="col-md-3">
+          <label class="form-label">Contraseña</label>
+          <input name="contrasena_user" type="password" class="form-control" placeholder="Contraseña" required>
+        </div>
+        <div class="col-12 text-end">
+          <button type="submit" class="btn btn-success">Agregar Doctor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabla de Listado -->
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>ID</th><th>Nombre</th><th>Apellido</th><th>Email Dr.</th><th>Estado</th>
+        <th>ID Usuario</th><th>Usuario</th><th>Email Usuario</th><th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in doctores %}
+      <tr>
+        <td>{{ d.id_medico }}</td>
+        <td>{{ d.nombre_medico }}</td>
+        <td>{{ d.apellido_medico }}</td>
+        <td>{{ d.email_medico }}</td>
+        <td>{{ d.estado }}</td>
+        <td>{{ d.id_usuario or '-' }}</td>
+        <td>{{ d.nombre_usuario or '-' }}</td>
+        <td>{{ d.email_usuario or '-' }}</td>
+        <td class="d-flex gap-1">
+          <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ d.id_medico }}">Editar</button>
+          <form method="post" style="display:inline">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="id" value="{{ d.id_medico }}">
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar doctor?');">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+
+      <!-- Modal Editar -->
+      <div class="modal fade" id="editModal{{ d.id_medico }}" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <form method="post">
+              <input type="hidden" name="action" value="update">
+              <input type="hidden" name="id" value="{{ d.id_medico }}">
+              <div class="modal-header">
+                <h5 class="modal-title">Editar Doctor #{{ d.id_medico }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body row g-3">
+                <div class="col-md-4"><label>Nombre</label><input name="nombre" value="{{ d.nombre_medico }}" class="form-control"></div>
+                <div class="col-md-4"><label>Apellido</label><input name="apellido" value="{{ d.apellido_medico }}" class="form-control"></div>
+                <div class="col-md-4"><label>Email</label><input name="email" type="email" value="{{ d.email_medico }}" class="form-control"></div>
+                <div class="col-md-4"><label>Estado</label><select name="estado" class="form-select"><option value="activo" {% if d.estado=='activo' %}selected{% endif %}>Activo</option><option value="inactivo" {% if d.estado=='inactivo' %}selected{% endif %}>Inactivo</option></select></div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

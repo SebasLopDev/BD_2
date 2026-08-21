@@ -1,0 +1,52 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Nosotros{% endblock %}
+
+{% block content %}
+
+<main class="cont-nosotros">
+
+    <!-- Imagen con texto encima -->
+        <section class="seccion-imagen-texto">
+            <div class="contenedor-imagen-texto">
+                <div class="texto-encima">
+                    <h1>Nosotros<br><span class="subtitulo">Somos la red más grande de salud</span></h1>
+                </div>
+                <img src="./static/images/ambulancia.png" alt="Ambulancia" class="imagen-ambulancia">
+            </div>
+        </section>
+    
+    <!-- División con frases -->
+    <section class="seccion-frases">
+        <div class="contenedor-frases">
+            <div class="frase">
+                <p>"Comprometidos con tu bienestar en cada consulta"</p>
+            </div>
+            <div class="frase">
+                <p>"Tecnología y calidez humana al servicio de tu salud"</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Viñetas con enlaces -->
+    <section class="seccion-vinetas">
+        <h2>Conoce más sobre nuestra clínica</h2>
+        <div class="contenedor-vinetas">
+            <a href="{{ url_for('especialidades') }}" class="vineta-link">
+                <div class="vineta">
+                    <h3>Especialidades</h3>
+                    <p>Descubre todas las áreas médicas que ofrecemos</p>
+                </div>
+            </a>
+            <a href="{{ url_for('staff_medico') }}" class="vineta-link">
+                <div class="vineta">
+                    <h3>Médicos Especializados</h3>
+                    <p>Conoce a nuestro equipo profesional de salud</p>
+                </div>
+            </a>
+        </div>
+    </section>
+</main>    
+
+
+{% endblock %}
