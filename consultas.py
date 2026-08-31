@@ -273,14 +273,22 @@ def obtener_sala_disponible_para_medico(id_medico, fecha, hora):
               
 def listar_doctores():
     conn = obtener_conexion()
+
+    if not conn:
+        return[ ]
+
     try:
         with conn.cursor() as cursor:
             cursor.execute("SELECT nombre, apellido, email FROM Medico WHERE estado='activo'")
             rows = cursor.fetchall()
             cols = [col[0] for col in cursor.description]
-        return [dict(zip(cols, row)) for row in rows]
+            return [dict(zip(cols, row)) for row in rows]
+    except Exception as e:
+        print("Error al listar doctores:", e)
+        return []
     finally:
-        conn.close()    
+        if conn:
+            conn.close()    
 
 
 #ADMIN
