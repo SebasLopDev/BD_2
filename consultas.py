@@ -8,6 +8,9 @@ from bd import obtener_conexion
 
 def insertar_usuario_y_paciente(nombre, apellido, dni, fecha_nacimiento, sexo, telefono, direccion, email, contrasena, id_rol):
     conexion = obtener_conexion()
+    if not conexion:
+        print("Error: No se pudo establecer la conexión a la base de datos.")
+        return None
     try:
         with conexion.cursor() as cursor:
             id_paciente = None
@@ -47,6 +50,9 @@ def insertar_usuario_y_paciente(nombre, apellido, dni, fecha_nacimiento, sexo, t
         
 def obtener_usuario_paciente_por_dni(dni):
     conexion = obtener_conexion()
+    if not conexion:
+        print("Error: No se pudo establecer la conexión a la base de datos.")
+        return None
     try:
         with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
             sql = """ SELECT us.*, p.nombre, p.id_paciente AS paciente_id
@@ -61,6 +67,9 @@ def obtener_usuario_paciente_por_dni(dni):
         
 def obtener_usuario_medico_por_email(email):
     conexion = obtener_conexion()
+    if not conexion:
+        print("Error: No se pudo establecer la conexión a la base de datos.")
+        return None
     try:
         with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
             sql = """
