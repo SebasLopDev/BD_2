@@ -1,15 +1,16 @@
-import pymysql
+import psycopg2
+from psycopg2 import OperationalError
 
 def obtener_conexion():
     try:
-        conexion = pymysql.connect(
+        conexion = psycopg2.connect(
             host='localhost',
-            user='root',
-            password='root',
-            database='CLINICA'
+            database='CLINICA',
+            user='postgres',
+            password='Bill1sn0tdead'  # Reemplaza con tu contraseña de pgAdmin
         )
-        print("Conexión exitosa a la base de datos")
+        print("Conexión exitosa a la base de datos PostgreSQL")
         return conexion
-    except pymysql.MySQLError as e:
-        print("Error al conectar:", e)
+    except OperationalError as e:
+        print("Error al conectar a PostgreSQL:", e)
         return None
