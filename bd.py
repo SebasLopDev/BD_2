@@ -6,8 +6,8 @@ def obtener_conexion():
         conexion = psycopg2.connect(
             host='localhost',
             database='CLINICA',
-            user='postgres',
-            password='Bill1sn0tdead'  # Reemplaza con tu contraseña de pgAdmin
+            user='', #usuario
+            password=''  # Reemplaza con tu contraseña de pgAdmin
         )
         print("Conexión exitosa a la base de datos PostgreSQL")
         return conexion

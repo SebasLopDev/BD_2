@@ -409,6 +409,22 @@ a:hover .sub_reg {
     font-family: 'Inter', sans-serif;
     
 }
+
+.link-registro {
+    color: #4d4d4d; 
+    text-decoration: none; 
+    text-align: center;
+    font-size: 0.9rem;
+    font-family: sans-serif;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+    margin-top: 1rem;
+}
+
+.link-registro:hover {
+    color: #686869; 
+    text-decoration: underline; 
+}
+
 .TitleLog{    
     text-align: center;
     padding: 1.5rem;
