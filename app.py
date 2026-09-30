@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session,send_file
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 import consultas
-import pymysql.err # Importante para capturar errores específicos
+import psycopg2.errors  # Cambiado de pymysql a psycopg2 para PostgreSQL
 from datetime import datetime
 import io
 import pandas as pd
@@ -8,14 +8,10 @@ import pandas as pd
 app = Flask(__name__)
 app.secret_key = "clave_segura"
 
-'''@app.route('/')
-def home():
-    return render_template('index.html')'''
-    
 @app.route('/')
 def home():
     doctores = consultas.listar_doctores()    
-    return render_template('index.html',doctores=doctores)  
+    return render_template('index.html', doctores=doctores)  
 
 
 @app.route('/registro', methods=["GET", "POST"])
@@ -33,7 +29,6 @@ def registrar():
         id_rol = request.form["id_rol"]
 
         try:
-            # Función que guarda el usuario y el paciente
             consultas.insertar_usuario_y_paciente(
                 nombre, apellido, dni, fecha_nacimiento, sexo,
                 telefono, direccion, email, contrasena, id_rol
@@ -41,11 +36,17 @@ def registrar():
             flash("Usuario registrado con éxito.", "success")
             return redirect(url_for('login'))
 
-        except pymysql.err.IntegrityError as e:
-            # Si el error es por clave foránea inválida o email duplicado
-            if "foreign key constraint" in str(e).lower():
+        except psycopg2.errors.ForeignKeyViolation:  # Excepción específica de PostgreSQL
+            flash("Rol inválido. Por favor selecciona un rol correcto.", "danger")
+        except psycopg2.errors.UniqueViolation:      # Excepción de duplicados en PostgreSQL
+            flash("El correo o DNI ya está registrado.", "warning")
+        except Exception as e:
+            # En psycopg2 a veces las excepciones se capturan genéricamente si vienen del wrapper, 
+            # pero validamos por texto por si acaso o dejamos el genérico
+            error_str = str(e).lower()
+            if "foreign key" in error_str:
                 flash("Rol inválido. Por favor selecciona un rol correcto.", "danger")
-            elif "duplicate" in str(e).lower():
+            elif "unique constraint" in error_str or "duplicate key" in error_str:
                 flash("El correo o DNI ya está registrado.", "warning")
             else:
                 flash("Ocurrió un error inesperado. Intenta nuevamente.", "danger")
@@ -53,8 +54,6 @@ def registrar():
     return render_template("registro.html")
 
 
-
-#egdar 
 @app.route('/nosotros')
 def nosotros():
     return render_template('nosotros.html') 
@@ -85,7 +84,7 @@ def consultar_especialidades():
 
     if request.method == "POST":
         id_especialidad = request.form.get("id_especialidad")
-        if id_especialidad:  # Solo si se seleccion� algo
+        if id_especialidad:  
             doctores = consultas.obtener_medicos_por_especialidad(id_especialidad)
             especialidad_seleccionada = int(id_especialidad)
 
@@ -93,8 +92,7 @@ def consultar_especialidades():
                            especialidades=especialidades,
                            doctores=doctores,
                            especialidad_seleccionada=especialidad_seleccionada)
-    
-#finEdgar        
+
 
 @app.route('/login')
 def login():
@@ -120,7 +118,6 @@ def login_paciente():
     return render_template("login_paciente.html")
 
 
-
 @app.route('/login_medico', methods=["GET", "POST"])
 def login_medico():
     if request.method == "POST":
@@ -129,11 +126,11 @@ def login_medico():
 
         usuario = consultas.obtener_usuario_medico_por_email(email)
 
-        if usuario and usuario["contrasena_user"] == contrasena:  # O usa check_password_hash si está encriptada
+        if usuario and usuario["contrasena_user"] == contrasena:  
             session["usuario_id"] = usuario["medico_id"]
             session["nombre"] = usuario["nombre"]
             session["rol"] = "medico"
-            flash("Inicio de sesión exitoso " , "success")
+            flash("Inicio de sesión exitoso", "success")
             return redirect(url_for('pagina_medico'))
         else:
             flash("Email o contraseña incorrectos", "danger")
@@ -177,17 +174,13 @@ def nueva_cita():
         hora = request.form["hora"]
         motivo = request.form["motivo"]
         id_medico = request.form["id_medico"]
-        #id_sala = request.form["id_sala"] or None
-        id_sala = consultas.obtener_sala_disponible_para_medico(id_medico, fecha, hora)       
+        id_sala = consultas.obtener_sala_disponible_para_medico(id_medico, fecha, hora)        
 
         consultas.insertar_cita(fecha, hora, motivo, id_medico, paciente_id, id_sala)
         flash("Cita reservada con éxito", "success")
         return redirect(url_for('nueva_cita'))
 
-    # Obtener todas las especialidades disponibles para mostrar en el formulario
     especialidades = consultas.obtener_especialidades()
-
-    # También traemos las salas disponibles y las citas del paciente
     salas = consultas.obtener_salas_disponibles()
     citas = consultas.obtener_citas_por_paciente(paciente_id)
 
@@ -215,7 +208,6 @@ def editar_cita(id):
         flash("Cita actualizada", "success")
         return redirect(url_for('nueva_cita'))
 
-    # Obtener especialidad del médico actual
     medicos = consultas.obtener_medicos_por_especialidad(cita["id_especialidad"])
     salas = consultas.obtener_salas_disponibles()
     especialidades = consultas.obtener_especialidades()
@@ -225,35 +217,6 @@ def editar_cita(id):
                            medicos=medicos,
                            salas=salas,
                            especialidades=especialidades)
-
-'''
-@app.route('/citas/<int:id>/editar', methods=["GET", "POST"])
-def editar_cita(id):
-    cita = consultas.obtener_cita_por_id(id)
-    if not cita or cita["id_paciente"] != session.get("usuario_id"):
-        flash("Acceso denegado", "danger")
-        return redirect(url_for('nueva_cita'))
-
-    if request.method == "POST":
-        fecha = request.form["fecha"]
-        hora = request.form["hora"]
-        motivo = request.form["motivo"]
-        id_medico = request.form["id_medico"]
-        id_sala = request.form["id_sala"] or None
-        consultas.actualizar_cita(id, fecha, hora, motivo, id_medico, id_sala)
-        flash("Cita actualizada", "success")
-        return redirect(url_for('nueva_cita'))
-
-    #medicos = consultas.obtener_medicos_activos()
-    medicos = consultas.obtener_medicos_por_especialidad(cita["id_especialidad"])
-    salas = consultas.obtener_salas_disponibles()
-    return render_template("citas/formulario_editar.html",
-                       cita=cita,
-                       medicos=medicos,
-                       salas=salas,
-                       especialidades=especialidades)
-
-'''
 
 @app.route('/citas/<int:id>/eliminar')
 def eliminar_cita(id):
@@ -308,7 +271,6 @@ def crear_diagnostico():
         id_cita = request.form["id_cita"]
 
         consultas.insertar_diagnostico(descripcion, id_enfermedad, id_cita)
-        # Buscar el diagnóstico recién creado
         diagnosticos = consultas.obtener_diagnosticos_por_medico(id_medico)
         diagnostico_id = diagnosticos[0]["id_diagnostico"] if diagnosticos else None
         flash("Diagnóstico registrado correctamente", "success")
@@ -372,7 +334,6 @@ def crear_receta(id_diagnostico):
         flash("Acceso no autorizado", "danger")
         return redirect(url_for('login_medico'))
 
-    # Buscar la cita asociada al diagnóstico
     diagnostico = consultas.obtener_diagnostico_por_id(id_diagnostico)
     if not diagnostico:
         flash("Diagnóstico no encontrado", "danger")
@@ -428,16 +389,6 @@ def editar_medicamento(id):
 
     return render_template("medicamentos/formulario_editar.html", medicamento=medicamento)
 
-'''@app.route('/medicamentos/<int:id>/eliminar')
-def eliminar_medicamento(id):
-    if 'usuario_id' not in session or session['rol'] != 'medico':
-        flash("Acceso denegado", "danger")
-        return redirect(url_for('login_medico'))
-
-    consultas.eliminar_medicamento(id)
-    flash("Medicamento eliminado", "info")
-    return redirect(request.referrer)'''
-    
 @app.route('/medicamentos/<int:id>/eliminar')
 def eliminar_medicamento(id):
     if 'usuario_id' not in session or session['rol'] != 'medico':
@@ -445,13 +396,12 @@ def eliminar_medicamento(id):
         return redirect(url_for('login_medico'))
 
     try:
-        consultas.eliminar_relaciones_medicamento(id)  # Primero elimina relaciones
-        consultas.eliminar_medicamento(id)              # Luego elimina medicamento
+        consultas.eliminar_relaciones_medicamento(id)               
+        consultas.eliminar_medicamento(id)                           
         flash("Medicamento eliminado correctamente", "success")
     except Exception as e:
         flash(f"No se pudo eliminar el medicamento: {str(e)}", "danger")
 
-    # Regresar a la receta actual
     id_diagnostico = request.args.get("id_diagnostico")
     return redirect(url_for('ver_medicamentos_diagnostico', id=id_diagnostico))
     
@@ -513,11 +463,11 @@ def listar_recetas():
         flash("Acceso denegado", "danger")
         return redirect(url_for('login_medico'))
 
-    recetas = consultas.obtener_recetas()  # Debes tener esta función en `consultas.py`
+    recetas = consultas.obtener_recetas()  
     return render_template("recetas/lista.html", recetas=recetas)
 
 
-#ADMIN
+# ADMIN
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_login():
@@ -531,8 +481,6 @@ def admin_login():
         flash('Credenciales incorrectas', 'danger')
     return render_template('admin_login.html')
 
-
-# --- Panel protegido ---
 @app.route('/admin/panel')
 def admin_panel():
     if not session.get('is_admin'):
@@ -540,7 +488,6 @@ def admin_panel():
         return redirect(url_for('admin_login'))
     return render_template('admin_panel.html')
 
-# --- Logout ---
 @app.route('/admin/logout')
 def admin_logout():
     session.pop('is_admin', None)
@@ -550,10 +497,8 @@ def admin_logout():
 @app.route('/admin/modificar_paciente', methods=['GET', 'POST'])
 def modificar_paciente():
     if request.method == 'POST':
-        # Determinar acción
         action = request.form.get('action')
         if action == 'add':
-            # Campos Paciente
             nombre           = request.form['nombre']
             apellido         = request.form['apellido']
             dni              = request.form['dni']
@@ -562,7 +507,6 @@ def modificar_paciente():
             telefono         = request.form['telefono']
             direccion        = request.form['direccion']
             email            = request.form['email']
-            # Campos Usuario
             nombre_user      = request.form['nombre']
             contrasena_user  = request.form['contrasena_user']
             nuevo_id = consultas.insertar_paciente_con_usuario(
@@ -583,14 +527,7 @@ def modificar_paciente():
             else:
                 flash('Error al eliminar paciente. Verifica que no tenga datos relacionados bloqueados.', 'danger')
             return redirect(url_for('modificar_paciente'))
-            
-            '''if consultas.eliminar_paciente(id_paciente):
-                flash('Paciente y usuario eliminados', 'success')
-            else:
-                flash('Error al eliminar paciente', 'danger')
-            return redirect(url_for('modificar_paciente'))'''
 
-        # action == 'update'
         nombre           = request.form['nombre']
         apellido         = request.form['apellido']
         dni              = request.form['dni']
@@ -609,7 +546,6 @@ def modificar_paciente():
             flash('Error al actualizar paciente', 'danger')
         return redirect(url_for('modificar_paciente'))
 
-    # GET: listar
     pacientes = consultas.get_all_pacientes()
     return render_template('modificar_paciente.html', pacientes=pacientes)
 
@@ -618,12 +554,10 @@ def modificar_doctor():
     if request.method == 'POST':
         action = request.form.get('action')
         if action == 'add':
-            # Campos Medico
             nombre  = request.form['nombre']
             apellido= request.form['apellido']
             email   = request.form['email']
             estado  = request.form['estado']
-            # Campos Usuario
             nombre_user     = request.form['nombre']
             contrasena_user = request.form['contrasena_user']
             new_id = consultas.insertar_doctor_con_usuario(
@@ -644,7 +578,6 @@ def modificar_doctor():
                 flash('Error al eliminar doctor', 'danger')
             return redirect(url_for('modificar_doctor'))
 
-        # action == 'update'
         nombre  = request.form['nombre']
         apellido= request.form['apellido']
         email   = request.form['email']
@@ -655,13 +588,12 @@ def modificar_doctor():
             flash('Error al actualizar doctor', 'danger')
         return redirect(url_for('modificar_doctor'))
 
-    # GET
     doctores = consultas.get_all_doctores()
     return render_template('modificar_doctor.html', doctores=doctores)
 
 @app.route('/admin/reporte_pacientes', methods=['GET'])
 def reporte_pacientes():
-    desde = request.args.get('desde')      # YYYY-MM-DD para fecha_nacimiento
+    desde = request.args.get('desde')      
     hasta = request.args.get('hasta')
     sexo  = request.args.get('sexo')
     texto = request.args.get('texto')
@@ -694,4 +626,3 @@ def reporte_pacientes():
 if __name__ == '__main__':
     print("Iniciando Flask en http://localhost:5000")
     app.run(debug=True)
-
