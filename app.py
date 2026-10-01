@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 import consultas
 import psycopg2.errors  # Cambiado de pymysql a psycopg2 para PostgreSQL
+from psycopg2.extras import RealDictCursor
 from datetime import datetime
 import io
 import pandas as pd

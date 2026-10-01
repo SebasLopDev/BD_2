@@ -54,7 +54,7 @@ def obtener_usuario_paciente_por_dni(dni):
         print("Error: No se pudo establecer la conexión a la base de datos.")
         return None
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             sql = """ SELECT us.*, p.nombre, p.id_paciente AS paciente_id
                 FROM Usuario_Sistema us
                 JOIN Paciente p ON us.id_paciente = p.id_paciente
@@ -71,7 +71,7 @@ def obtener_usuario_medico_por_email(email):
         print("Error: No se pudo establecer la conexión a la base de datos.")
         return None
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             sql = """
                 SELECT us.*, m.nombre, m.id_medico AS medico_id
                 FROM Usuario_Sistema us
@@ -86,7 +86,7 @@ def obtener_usuario_medico_por_email(email):
 def obtener_citas_por_paciente(paciente_id):
     conexion = obtener_conexion()
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             sql = """
                 SELECT c.*, m.nombre AS nombre_medico, s.nombre AS nombre_sala
                 FROM Cita c
@@ -114,7 +114,7 @@ def insertar_cita(fecha, hora, motivo, id_medico, id_paciente, id_sala):
 def obtener_cita_por_id(id_cita):
     conexion = obtener_conexion()
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             sql = """
                 SELECT c.*, me.id_especialidad
                 FROM Cita c
@@ -129,7 +129,7 @@ def obtener_cita_por_id(id_cita):
 '''def obtener_cita_por_id(id_cita):
     conexion = obtener_conexion()
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             sql = "SELECT * FROM Cita WHERE id_cita = %s"
             cursor.execute(sql, (id_cita,))
             return cursor.fetchone()
@@ -165,7 +165,7 @@ def eliminar_cita(id_cita):
 def obtener_medicos_activos():
     conexion = obtener_conexion()
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             sql = "SELECT * FROM Medico WHERE estado = 'activo'"
             cursor.execute(sql)
             return cursor.fetchall()
@@ -175,7 +175,7 @@ def obtener_medicos_activos():
 def obtener_salas_disponibles():
     conexion = obtener_conexion()
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             sql = "SELECT * FROM Sala WHERE estado = 'disponible'"
             cursor.execute(sql)
             return cursor.fetchall()
@@ -187,7 +187,7 @@ def obtener_salas_disponibles():
 def obtener_especialidades():
     conexion = obtener_conexion()
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute("SELECT * FROM Especialidad")
             return cursor.fetchall()
     finally:
@@ -196,7 +196,7 @@ def obtener_especialidades():
 def obtener_especialidades_con_descripcion():
     conexion = obtener_conexion()
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute("SELECT id_especialidad, nombre_espclidad, descripcion_espclidad FROM especialidad order by nombre_espclidad")
             return cursor.fetchall()
     finally:
@@ -205,7 +205,7 @@ def obtener_especialidades_con_descripcion():
 def obtener_medicos_por_especialidad(id_especialidad):
     conexion = obtener_conexion()
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute("""
                 SELECT m.id_medico, m.nombre, m.apellido
                 FROM Medico m
@@ -219,7 +219,7 @@ def obtener_medicos_por_especialidad(id_especialidad):
 def obtener_turnos_medico(id_medico):
     conexion = obtener_conexion()
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute("""
                 SELECT dia_semana, hora_inicio, hora_fin
                 FROM Turno_Medico
@@ -244,7 +244,7 @@ def obtener_precio_por_especialidad(id_especialidad):
 '''def obtener_sala_disponible_para_medico(id_medico, fecha, hora):
     conexion = obtener_conexion()
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute("""
                 SELECT s.id_sala
                 FROM Sala s
@@ -264,7 +264,7 @@ def obtener_precio_por_especialidad(id_especialidad):
 def obtener_sala_disponible_para_medico(id_medico, fecha, hora):
     conexion = obtener_conexion()
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute("""
                 SELECT s.id_sala
                 FROM Sala s
@@ -665,7 +665,7 @@ def get_pacientes_dataframe(desde=None, hasta=None, sexo=None, texto_busqueda=No
 '''def obtener_doctores_por_especialidad(id_especialidad):
     conexion = obtener_conexion()
     try:
-        with conexion.cursor(RealDictCursor) as cursor:
+        with conexion.cursor(cursor_factory=RealDictCursor) as cursor:
             sql = """
                 SELECT m.id_medico, m.nombre, m.apellido, m.email, e.nombre_espclidad
                 FROM Medico m

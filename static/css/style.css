@@ -302,20 +302,11 @@ a:hover .sub_reg {
     justify-content: center;
     align-items: center;
     margin-top: 7.5rem;
-    margin-bottom: 30rem;
+    margin-bottom: 5rem;
     flex-direction: column;
 }
 
-.container_registro{
-  max-width: 37.5rem; /* 600px */
-  margin: 5rem auto;
-  
-  padding: 3rem 2rem;
-  border-radius: var(--radio);
-  
-  font-family: 'Inter', sans-serif;
-  margin-bottom: 20rem;
-}
+
 
 .container_registro h1 {
   text-align: center;
@@ -404,7 +395,7 @@ a:hover .sub_reg {
 
 .formLogin-container{
     max-width: 37.5rem; /* 600px */
-    margin: 3rem auto 22rem auto;    
+    margin: 3rem auto 0 auto;    
     padding: 3rem 2rem;    
     font-family: 'Inter', sans-serif;
     
@@ -432,7 +423,7 @@ a:hover .sub_reg {
 
 .container-pagina{
     margin-top: 6rem;
-    margin-bottom: 30rem;
+    height: 100vh;    
 }
 
 .container_nueva_listado{
@@ -441,7 +432,7 @@ a:hover .sub_reg {
     padding-left: 15rem;
     padding-right: 15rem;
     flex-direction: column;
-    margin-bottom:25rem;
+    margin-bottom:5rem;
     
 
 }
