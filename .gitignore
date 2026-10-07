@@ -5,3 +5,15 @@ env/
 .DS_Store
 
 __pycache__/
+# Compilacion de PostgreSQL
+*.o
+*.bc
+*.so
+*.a
+
+# Archivos temporales
+*.log
+*.tmp
+
+# Docker
+postgres_data/
