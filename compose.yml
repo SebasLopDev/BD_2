@@ -1,0 +1,16 @@
+services:
+  postgres:
+    build: .
+    container_name: postgres_isam
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: clinica
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./isam_extension:/isam_extension
+
+volumes:
+  postgres_data:

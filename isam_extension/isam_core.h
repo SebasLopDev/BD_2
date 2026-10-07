@@ -21,6 +21,13 @@ typedef struct DataPage {
     struct DataPage* overflow;   // Puntero a la siguiente página si esta se llena
 } DataPage;
 
+typedef struct {
+    int first_key;
+    DataPage* page_ptr;
+} IndexEntry;
+/*Construccion*/
+int construir_indice(void);
+
 // Promesas de funciones (Lo que cada uno va a programar)
 // María Belén:
 DataPage* buscar_pagina(int clave);
