@@ -35,4 +35,6 @@ DataPage* buscar_pagina(int clave);
 // Sebastian:
 void insertar_registro(Record nuevo_registro);
 
+// Gonzalo:
+void insertar_registro_persistente(Record nuevo_registro);
 #endif

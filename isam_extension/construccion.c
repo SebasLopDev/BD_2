@@ -1,11 +1,16 @@
 // construccion.c
+
 #include "isam_core.h"
 
 #include "executor/spi.h"
 #include "utils/builtins.h"
+#include "utils/memutils.h"
 
 IndexEntry *indice_estatico = NULL;
 int total_entradas_indice = 0;
+
+/* Contexto para conservar el indice entre llamadas SQL. */
+static MemoryContext contexto_isam = NULL;
 
 int construir_indice(void)
 {
@@ -35,15 +40,37 @@ int construir_indice(void)
 
     cantidad = SPI_processed;
 
+    /*
+     * Eliminar el indice anterior despues de comprobar
+     * que la consulta se ejecuto correctamente.
+     */
+    if (contexto_isam != NULL)
+    {
+        MemoryContextDelete(contexto_isam);
+        contexto_isam = NULL;
+    }
+
+    indice_estatico = NULL;
+    total_entradas_indice = 0;
+
     if (cantidad == 0)
     {
         SPI_finish();
-
-        indice_estatico = NULL;
-        total_entradas_indice = 0;
-
         return 0;
     }
+
+    /*
+     * Crear un contexto que sobreviva al final de esta
+     * llamada SQL dentro del backend actual.
+     */
+    contexto_isam = AllocSetContextCreate(
+        TopMemoryContext,
+        "ISAM index context",
+        ALLOCSET_DEFAULT_SIZES
+    );
+
+    MemoryContext contexto_anterior =
+        MemoryContextSwitchTo(contexto_isam);
 
     total_entradas_indice =
         (cantidad + MAX_RECORDS - 1) / MAX_RECORDS;
@@ -65,21 +92,19 @@ int construir_indice(void)
         bool is_null_id;
         bool is_null_nombre;
 
-        Datum id_datum =
-            SPI_getbinval(
-                SPI_tuptable->vals[i],
-                SPI_tuptable->tupdesc,
-                1,
-                &is_null_id
-            );
+        Datum id_datum = SPI_getbinval(
+            SPI_tuptable->vals[i],
+            SPI_tuptable->tupdesc,
+            1,
+            &is_null_id
+        );
 
-        Datum nombre_datum =
-            SPI_getbinval(
-                SPI_tuptable->vals[i],
-                SPI_tuptable->tupdesc,
-                2,
-                &is_null_nombre
-            );
+        Datum nombre_datum = SPI_getbinval(
+            SPI_tuptable->vals[i],
+            SPI_tuptable->tupdesc,
+            2,
+            &is_null_nombre
+        );
 
         if (is_null_id)
         {
@@ -136,7 +161,26 @@ int construir_indice(void)
                 .search_key;
     }
 
+    /*
+     * Restaurar el contexto anterior antes de finalizar SPI.
+     */
+    MemoryContextSwitchTo(contexto_anterior);
+
     SPI_finish();
 
     return total_entradas_indice;
+}
+void insertar_registro_persistente(Record nuevo_registro)
+{
+    if (contexto_isam == NULL)
+    {
+        elog(ERROR, "Primero debe ejecutar isam_build()");
+    }
+
+    MemoryContext contexto_anterior =
+        MemoryContextSwitchTo(contexto_isam);
+
+    insertar_registro(nuevo_registro);
+
+    MemoryContextSwitchTo(contexto_anterior);
 }
