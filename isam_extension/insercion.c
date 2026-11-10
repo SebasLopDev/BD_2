@@ -6,6 +6,24 @@
 extern IndexEntry *indice_estatico;
 extern int total_entradas_indice;
 
+// Comprueba si una clave ya existe en la página principal
+// o en alguna de sus páginas overflow.
+static int existe_clave(DataPage *pagina, int clave) {
+
+    while (pagina != NULL) {
+
+        for (int i = 0; i < pagina->current_count; i++) {
+
+            if (pagina->records[i].search_key == clave) {
+                return 1;
+            }
+        }
+
+        pagina = pagina->overflow;
+    }
+
+    return 0;
+}
 
 // Inserta un registro en una página que tiene espacio.
 // Mantiene los registros ordenados por search_key.
