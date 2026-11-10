@@ -32,5 +32,11 @@ DataPage* buscar_pagina(int clave) {
         }
     }
 
-    return pagina_destino; 
+    // Si la clave es menor que la primera clave del índice,
+    // debe dirigirse a la primera página.
+    if (pagina_destino == NULL && clave < indice_estatico[0].first_key) {
+        return indice_estatico[0].page_ptr;
+    }
+    
+    return pagina_destino;
 }
