@@ -1,5 +1,7 @@
 // insercion.c
 #include "isam_core.h"
+extern IndexEntry *indice_estatico;
+extern int total_entradas_indice;
 
 void insertar_registro(Record nuevo_registro) {
     // 1. Llamada a la función de búsqueda (con mock data)
