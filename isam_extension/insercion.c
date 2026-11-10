@@ -22,17 +22,30 @@ void insertar_registro(Record nuevo_registro) {
             pagina->current_count+=1;
         }else{
             for(int i=0;i<pagina->current_count;i++){
-                
-                if(key<pagina->records[i].search_key){
-                
+                if(key < pagina->records[i].search_key){
+
                     for(int j=pagina->current_count;j!=i;j--){
                         pagina->records[j]=pagina->records[j-1];
                     }
+                
                     pagina->records[i]=nuevo_registro;
                     pagina->current_count+=1;
+                
+                    // Si insertamos al principio de la página principal,
+                    // actualizamos su first_key en el índice.
+                    if (i == 0) {
+                        for (int k = 0; k < total_entradas_indice; k++) {
+                            if (indice_estatico[k].page_ptr == pagina) {
+                                indice_estatico[k].first_key =
+                                    pagina->records[0].search_key;
+                                break;
+                            }
+                        }
+                    }
+                
                     return;
-
-                }else{
+                }
+                else{
                     continue;
                 }
             }
