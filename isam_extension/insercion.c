@@ -78,6 +78,11 @@ void insertar_registro(Record nuevo_registro) {
         ereport(ERROR,
                 (errmsg("No se encontro una pagina para la clave")));
     }
+    // 3. Comprobar si la clave ya existe (duplicado)
+    if (existe_clave(pagina_principal, nuevo_registro.search_key)) {
+        ereport(ERROR,
+                (errmsg("No se puede insertar: la clave ya existe")));
+    }
 
     // 3. Buscar la página donde corresponde insertar.
     DataPage *destino = pagina_principal;
