@@ -1,0 +1,61 @@
+ID_SALA,NOMBRE,TIPO,ESTADO
+1,Sala 001,Emergencia,no-disponible
+2,Sala 002,Procedimientos,ocupado
+3,Sala 003,Emergencia,ocupado
+4,Sala 004,Diagnostico,ocupado
+5,Sala 005,Diagnostico,disponible
+6,Sala 006,Consulta Externa,ocupado
+7,Sala 007,Emergencia,ocupado
+8,Sala 008,Diagnostico,disponible
+9,Sala 009,Emergencia,ocupado
+10,Sala 010,Emergencia,ocupado
+11,Sala 011,Procedimientos,no-disponible
+12,Sala 012,Diagnostico,disponible
+13,Sala 013,Procedimientos,disponible
+14,Sala 014,Consulta Externa,ocupado
+15,Sala 015,Emergencia,ocupado
+16,Sala 016,Procedimientos,no-disponible
+17,Sala 017,Emergencia,ocupado
+18,Sala 018,Emergencia,no-disponible
+19,Sala 019,Emergencia,ocupado
+20,Sala 020,Diagnostico,disponible
+21,Sala 021,Procedimientos,disponible
+22,Sala 022,Procedimientos,no-disponible
+23,Sala 023,Procedimientos,no-disponible
+24,Sala 024,Emergencia,disponible
+25,Sala 025,Emergencia,ocupado
+26,Sala 026,Emergencia,disponible
+27,Sala 027,Procedimientos,ocupado
+28,Sala 028,Emergencia,ocupado
+29,Sala 029,Procedimientos,disponible
+30,Sala 030,Consulta Externa,disponible
+31,Sala 031,Emergencia,disponible
+32,Sala 032,Diagnostico,disponible
+33,Sala 033,Procedimientos,ocupado
+34,Sala 034,Procedimientos,ocupado
+35,Sala 035,Emergencia,disponible
+36,Sala 036,Consulta Externa,no-disponible
+37,Sala 037,Emergencia,disponible
+38,Sala 038,Emergencia,disponible
+39,Sala 039,Consulta Externa,ocupado
+40,Sala 040,Diagnostico,no-disponible
+41,Sala 041,Procedimientos,ocupado
+42,Sala 042,Diagnostico,no-disponible
+43,Sala 043,Emergencia,no-disponible
+44,Sala 044,Consulta Externa,no-disponible
+45,Sala 045,Procedimientos,disponible
+46,Sala 046,Emergencia,disponible
+47,Sala 047,Emergencia,disponible
+48,Sala 048,Procedimientos,disponible
+49,Sala 049,Procedimientos,ocupado
+50,Sala 050,Emergencia,ocupado
+51,Sala 051,Diagnostico,no-disponible
+52,Sala 052,Consulta Externa,no-disponible
+53,Sala 053,Emergencia,disponible
+54,Sala 054,Diagnostico,disponible
+55,Sala 055,Consulta Externa,disponible
+56,Sala 056,Diagnostico,disponible
+57,Sala 057,Emergencia,ocupado
+58,Sala 058,Consulta Externa,disponible
+59,Sala 059,Procedimientos,disponible
+60,Sala 060,Diagnostico,no-disponible
