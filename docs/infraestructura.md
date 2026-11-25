@@ -1,6 +1,6 @@
 # Infraestructura Distribuida (3 Nodos PostgreSQL)
 
-Esta guía describe cómo levantar, configurar y verificar el entorno distribuido de 3 nodos PostgreSQL (`nodo_a`, `nodo_b` y `nodo_c`) con red dedicada e inyección de latencias simuladas mediante `tc netem`.
+Esta guía describe cómo levantar, configurar y verificar el entorno distribuido de 3 nodos PostgreSQL (`nodo_a`, `nodo_b` y `nodo_c`) con la extensión ISAM preinstalada, red dedicada e inyección de latencias simuladas mediante `tc netem`.
 
 ---
 
@@ -12,11 +12,6 @@ Esta guía describe cómo levantar, configurar y verificar el entorno distribuid
 > **Nota importante para Windows:**
 > - Los scripts en `scripts/` deben ejecutarse desde **Git Bash** o **WSL** (**no** desde PowerShell ni CMD).
 > - Docker Desktop debe estar configurado con el backend **WSL2**.
-
-> **Convivencia con el entorno ISAM (`compose.yml`):**
-> - El repositorio ya contiene un `compose.yml` para el módulo ISAM (`postgres_isam`), al cual Docker Compose da prioridad por defecto si no se pasa `-f`.
-> - Por ello, **todos** los comandos de este entorno distribuido deben usar explícitamente `-f docker-compose.yml` (que además utiliza el proyecto separado `name: bd2_distribuido`).
-> - **Conflicto de puerto:** `nodo_a` expone el puerto `5433` en el host, el mismo que `postgres_isam`. **No ejecutes ambos entornos a la vez** (detén `postgres_isam` antes de levantar los 3 nodos, o viceversa).
 
 ---
 
@@ -43,29 +38,45 @@ Si falta `.env` o alguna de estas variables, Docker Compose detendrá la ejecuci
 ### 2.2. Validar configuración y levantar los nodos
 
 ```bash
-# Validar el archivo compose y las variables de .env
-docker compose -f docker-compose.yml config
+# Validar compose.yml y las variables de .env
+docker compose config
 
-# Construir la imagen (postgres:18.6 + iproute2 + iputils-ping + herramientas ISAM) y levantar los 3 nodos
-docker compose -f docker-compose.yml up -d --build
+# Construir la imagen (postgres:18.6 + extensión ISAM + iproute2 + iputils-ping) y levantar los 3 nodos
+docker compose up -d --build
 ```
 
 Comandos útiles de monitoreo y control:
 
 ```bash
 # Ver estado y healthchecks de los contenedores
-docker compose -f docker-compose.yml ps
+docker compose ps
 
 # Ver logs en tiempo real
-docker compose -f docker-compose.yml logs -f
+docker compose logs -f
 
 # Detener los contenedores conservando los datos
-docker compose -f docker-compose.yml down
+docker compose down
 ```
 
 ---
 
-## 3. Simulación y verificación de latencias de red
+## 3. Extensión ISAM (`isam_extension/`) en los 3 nodos
+
+- Durante `docker compose up -d --build`, el `Dockerfile` compila e instala automáticamente `isam_extension/` en PostgreSQL 18 (`make && make install`), por lo que la extensión queda lista para habilitarse en cualquiera de los 3 nodos con:
+
+  ```sql
+  CREATE EXTENSION isam;
+  ```
+
+- Además, la carpeta local `./isam_extension` se monta en `/isam_extension` en `nodo_a`, `nodo_b` y `nodo_c` para permitir recompilación rápida durante desarrollo sin reconstruir la imagen:
+
+  ```bash
+  docker exec -it nodo_a bash -c "cd /isam_extension && make with_llvm=no clean && make with_llvm=no && make with_llvm=no install"
+  ```
+
+---
+
+## 4. Simulación y verificación de latencias de red
 
 Los tres contenedores se conectan a la red bridge `pg_dist_net` (`172.25.0.0/24`) con IPs estáticas y capacidad `NET_ADMIN`.
 
@@ -93,13 +104,13 @@ El tráfico hacia el host/gateway va por la banda 3 de `prio` (sin `netem`), de 
 ```
 
 > **Importante sobre persistencia de `tc`:**
-> Las reglas de `tc` viven en la pila de red en memoria de cada contenedor y **se pierden cada vez que reinicias o recreas los contenedores** (`docker compose -f docker-compose.yml restart`, `down`/`up`, reinicio de Docker). Cada vez que eso ocurra, debes volver a ejecutar `./scripts/setup_latencies.sh`.
+> Las reglas de `tc` viven en la pila de red en memoria de cada contenedor y **se pierden cada vez que reinicias o recreas los contenedores** (`docker compose restart`, `down`/`up`, reinicio de Docker). Cada vez que eso ocurra, debes volver a ejecutar `./scripts/setup_latencies.sh`.
 
 ---
 
-## 4. Conexión desde el host y conexiones internas / FDW
+## 5. Conexión desde el host y conexiones internas / FDW
 
-### 4.1. Conexión desde el host (clientes externos, `psql`, DBeaver, Python)
+### 5.1. Conexión desde el host (clientes externos, `psql`, DBeaver, Python)
 
 Usa las credenciales definidas en `.env` (`POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`) sobre `localhost`:
 
@@ -109,7 +120,7 @@ Usa las credenciales definidas en `.env` (`POSTGRES_USER`, `POSTGRES_PASSWORD`, 
 | `nodo_b` | `localhost` | `5434` | `psql -h localhost -p 5434 -U postgres -d clinica_dist` |
 | `nodo_c` | `localhost` | `5435` | `psql -h localhost -p 5435 -U postgres -d clinica_dist` |
 
-### 4.2. Conexiones internas entre nodos (FDW / `postgres_fdw`)
+### 5.2. Conexiones internas entre nodos (FDW / `postgres_fdw`)
 
 > **Nota para el siguiente integrante (configuración de FDW y fragmentación):**
 > - Las conexiones **internas** entre nodos (por ejemplo, al crear `SERVER` con `postgres_fdw` o `dblink`) deben usar siempre el **puerto interno `5432`**, **nunca** los puertos del host (`5433`, `5434`, `5435`).
@@ -118,7 +129,7 @@ Usa las credenciales definidas en `.env` (`POSTGRES_USER`, `POSTGRES_PASSWORD`, 
 
 ---
 
-## 5. Scripts de inicialización automática (`init-scripts/`)
+## 6. Scripts de inicialización automática (`init-scripts/`)
 
 Cada nodo monta en solo-lectura (`:ro`) el lanzador `init-scripts/00-run-all.sh` y sus carpetas de scripts:
 
@@ -129,16 +140,16 @@ Cada nodo monta en solo-lectura (`:ro`) el lanzador `init-scripts/00-run-all.sh`
 Los scripts de inicialización solo corren automáticamente cuando el volumen de datos del nodo (`pgdata_a`, `pgdata_b`, `pgdata_c`) se inicializa por primera vez. Para forzar que se vuelvan a ejecutar desde cero:
 
 ```bash
-docker compose -f docker-compose.yml down -v
-docker compose -f docker-compose.yml up -d --build
+docker compose down -v
+docker compose up -d --build
 ./scripts/setup_latencies.sh
 ```
 
-> **Advertencia:** `docker compose -f docker-compose.yml down -v` **elimina permanentemente los volúmenes nombrados (`pgdata_a`, `pgdata_b`, `pgdata_c`) y borra todos los datos de los tres nodos**. Úsalo únicamente cuando quieras reiniciar la base de datos por completo.
+> **Advertencia:** `docker compose down -v` **elimina permanentemente los volúmenes nombrados (`pgdata_a`, `pgdata_b`, `pgdata_c`) y borra todos los datos de los tres nodos**. Úsalo únicamente cuando quieras reiniciar la base de datos por completo.
 
 ---
 
-## 6. Troubleshooting
+## 7. Troubleshooting
 
 ### Error `\r` o `bad interpreter` en Windows (saltos de línea CRLF)
 
@@ -154,7 +165,3 @@ git checkout -- .
 ### Error de `tc` por módulos del kernel (`sch_netem` / `sch_prio`)
 
 Si `./scripts/setup_latencies.sh` falla al ejecutar `tc`, verifica que Docker Desktop esté usando el backend **WSL2** actualizado (en Linux nativo, verifica que el paquete de módulos extra del kernel incluya `sch_netem` y `sch_prio`, por ejemplo `linux-modules-extra-$(uname -r)` en Ubuntu/Debian).
-
-### Puerto `5433` ya en uso
-
-Si `nodo_a` falla al iniciar porque el puerto `5433` está ocupado, comprueba si el contenedor `postgres_isam` de `compose.yml` está corriendo y detenlo con `docker compose -f compose.yml down`.
