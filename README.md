@@ -246,3 +246,7 @@ Proyecto desarrollado para el curso de **Base de Datos II**.
 
 Proyecto académico desarrollado con fines educativos.
 
+## 🌐 Entorno distribuido (3 nodos PostgreSQL)
+
+Para levantar, configurar y verificar la infraestructura distribuida con simulación de latencias de red (`nodo_a`, `nodo_b`, `nodo_c`), consulta la guía en [docs/infraestructura.md](docs/infraestructura.md).
+
